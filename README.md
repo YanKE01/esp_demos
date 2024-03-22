@@ -4,3 +4,5 @@
 
 * http
   * baidu img classification
+* ubs
+  * hid device audio ctrl

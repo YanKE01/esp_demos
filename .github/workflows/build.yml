@@ -7,14 +7,26 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      PATHS_FILE: .github/paths.yml
+
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-    - name: esp-idf build
+
+    - name: http_baidu_img_classification
       uses: espressif/esp-idf-ci-action@v1
       with:
         esp_idf_version: v5.1
         target: esp32s3
         path: 'examples/http/http_baidu_img_classification'
+
+    - name: hid_device_audio_ctrl
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.1
+        target: esp32s3
+        path: 'examples/usb/hid_device_audio_ctrl'        
+        
