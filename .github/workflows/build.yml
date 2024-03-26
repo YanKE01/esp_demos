@@ -30,9 +30,16 @@ jobs:
         target: esp32s3
         path: 'examples/usb/hid_device_audio_ctrl'        
 
-    - name: hid_device_audio_ctrl
+    - name: esp_sr
       uses: espressif/esp-idf-ci-action@v1
       with:
         esp_idf_version: v5.1
         target: esp32s3
         path: 'examples/audio/esp_sr'   
+
+    - name: lcd_camera_lvgl
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.1
+        target: esp32s3
+        path: 'examples/lvgl/lcd_camera_lvgl'   
