@@ -6,5 +6,6 @@
   * baidu img classification
 * ubs
   * hid device audio ctrl
+  * usb host msc
 * audio
   * esp_sr
