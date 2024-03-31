@@ -50,3 +50,17 @@ jobs:
         esp_idf_version: v5.1
         target: esp32s3
         path: 'examples/usb/host/msc_host'   
+
+    - name: modbus serial master
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.1
+        target: esp32s3
+        path: 'examples/protocols/modbus/master/modbus_serial_master'   
+
+    - name: modbus serial slave
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.1
+        target: esp32s3
+        path: 'examples/protocols/modbus/slave/modbus_serial_slave'   

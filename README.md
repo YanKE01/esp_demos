@@ -9,3 +9,7 @@
   * usb host msc
 * audio
   * esp_sr
+* protocols
+  * modbus
+    * slave
+    * master
