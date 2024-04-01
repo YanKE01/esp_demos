@@ -7,7 +7,7 @@ dependencies:
   idf:
     version: ">=4.1.0"
   st7789:
-    override_path: "../../../../components/st7789"
+    override_path: "../../../../../components/st7789/"
   # # Put list of dependencies here
   # # For components maintained by Espressif:
   # component: "~1.0.0"
