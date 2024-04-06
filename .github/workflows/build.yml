@@ -64,3 +64,10 @@ jobs:
         esp_idf_version: v5.1
         target: esp32s3
         path: 'examples/protocols/modbus/slave/modbus_serial_slave'   
+
+    - name: u8g2 oled
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.1
+        target: esp32s3
+        path: 'examples/peripherals/lcd/u8g2_oled'   

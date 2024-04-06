@@ -13,3 +13,6 @@
   * modbus
     * slave
     * master
+* peripherals
+  * lcd
+    * oled
