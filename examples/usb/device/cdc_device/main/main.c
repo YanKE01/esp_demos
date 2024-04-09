@@ -1,12 +1,13 @@
 #include <stdint.h>
 #include "esp_log.h"
+#include "string.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "tinyusb.h"
 #include "tusb_cdc_acm.h"
-#include "sdkconfig.h"
+#include "cdc_config.h"
 
-static const char *TAG = "example";
+static const char *TAG = "CDC DEVICE";
 static uint8_t buf[512 + 1];
 
 void tinyusb_cdc_rx_callback(int itf, cdcacm_event_t *event)
@@ -31,27 +32,15 @@ void tinyusb_cdc_rx_callback(int itf, cdcacm_event_t *event)
     tinyusb_cdcacm_write_flush(itf, 0);
 }
 
-void tinyusb_cdc_line_state_changed_callback(int itf, cdcacm_event_t *event)
-{
-    int dtr = event->line_state_changed_data.dtr;
-    int rts = event->line_state_changed_data.rts;
-    ESP_LOGI(TAG, "Line state changed on channel %d: DTR:%d, RTS:%d", itf, dtr, rts);
-}
-
 void app_main(void)
 {
     ESP_LOGI(TAG, "USB initialization");
     const tinyusb_config_t tusb_cfg = {
-        .device_descriptor = NULL,
-        .string_descriptor = NULL,
+        .device_descriptor = &usb_cdc_device_descriptor,
+        .string_descriptor = usb_cdc_string_descriptor,
+        .string_descriptor_count = sizeof(usb_cdc_string_descriptor) / sizeof(usb_cdc_string_descriptor[0]),
         .external_phy = false,
-#if (TUD_OPT_HIGH_SPEED)
-        .fs_configuration_descriptor = NULL,
-        .hs_configuration_descriptor = NULL,
-        .qualifier_descriptor = NULL,
-#else
         .configuration_descriptor = NULL,
-#endif // TUD_OPT_HIGH_SPEED
     };
 
     ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
@@ -66,20 +55,5 @@ void app_main(void)
         .callback_line_coding_changed = NULL};
 
     ESP_ERROR_CHECK(tusb_cdc_acm_init(&acm_cfg));
-    /* the second way to register a callback */
-    ESP_ERROR_CHECK(tinyusb_cdcacm_register_callback(
-        TINYUSB_CDC_ACM_0,
-        CDC_EVENT_LINE_STATE_CHANGED,
-        &tinyusb_cdc_line_state_changed_callback));
-
-#if (CONFIG_TINYUSB_CDC_COUNT > 1)
-    acm_cfg.cdc_port = TINYUSB_CDC_ACM_1;
-    ESP_ERROR_CHECK(tusb_cdc_acm_init(&acm_cfg));
-    ESP_ERROR_CHECK(tinyusb_cdcacm_register_callback(
-        TINYUSB_CDC_ACM_1,
-        CDC_EVENT_LINE_STATE_CHANGED,
-        &tinyusb_cdc_line_state_changed_callback));
-#endif
-
     ESP_LOGI(TAG, "USB initialization DONE");
 }

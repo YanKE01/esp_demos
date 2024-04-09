@@ -78,3 +78,10 @@ jobs:
         esp_idf_version: v5.1
         target: esp32s3
         path: 'examples/http/http_aliyun_tongyiqianwen'   
+
+    - name: usb cdc device
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.1
+        target: esp32s3
+        path: 'examples/usb/device/cdc_device'   
