@@ -71,3 +71,10 @@ jobs:
         esp_idf_version: v5.1
         target: esp32s3
         path: 'examples/peripherals/lcd/u8g2_oled'   
+
+    - name: http aliyun tongyi
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.1
+        target: esp32s3
+        path: 'examples/http/http_aliyun_tongyiqianwen'   
