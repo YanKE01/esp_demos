@@ -1,0 +1,5 @@
+dependencies:
+  idf:
+    version: ">=4.1.0"
+  ssd1306:
+    override_path: "../../../../../components/ssd1306/"
