@@ -92,3 +92,10 @@ jobs:
         esp_idf_version: v5.1
         target: esp32s3
         path: 'examples/http/http_baidu_access_token' 
+
+    - name: http baidu tts
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.1
+        target: esp32c3
+        path: 'examples/http/http_baidu_tts' 
