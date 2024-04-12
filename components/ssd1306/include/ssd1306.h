@@ -34,6 +34,19 @@ typedef enum
     INVERSE     // 反色显示
 } display_mode_t;
 
+typedef struct
+{
+    int16_t start_x;
+    int16_t start_y;
+    int16_t w;
+    int16_t h;
+} window_t;
+
 esp_err_t ssd1306_init(ssd1306_hal_config_t config);
 void oled_refersh();
-void oled_write_byte(int x, int y, uint8_t val, display_mode_t mode);
+void oled_write_buffer(int16_t x, int16_t y, display_mode_t mode, uint8_t val);
+void oled_clear();
+void oled_win_draw_vline(window_t *win, int16_t x, int16_t y_start, int16_t y_end);
+void oled_win_draw_box(window_t *win, int16_t x_start, int16_t y_start, int16_t width, int16_t height, uint8_t r);
+int16_t oled_win_draw_ascii(window_t *win, int16_t x, int16_t y, char c);
+void oled_win_draw_str(window_t *win, int16_t x, int16_t y, uint8_t *str);
