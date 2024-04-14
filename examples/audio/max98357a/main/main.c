@@ -5,9 +5,9 @@
 #include "app_spiffs.h"
 
 hal_i2s_pin_t hal_i2s_pin = {
-    .bclk_pin = 8,
-    .dout_pin = 3,
-    .ws_pin = 18,
+    .bclk_pin = 10,
+    .dout_pin = 11,
+    .ws_pin = 9,
 };
 
 void app_main(void)
