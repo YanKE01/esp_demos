@@ -284,7 +284,7 @@ int16_t oled_win_draw_ascii(window_t *win, int16_t x, int16_t y, char c)
     return x;
 }
 
-void oled_win_draw_str(window_t *win, int16_t x, int16_t y, uint8_t *str)
+void oled_win_draw_str(window_t *win, int16_t x, int16_t y, char *str)
 {
     int16_t cur_x = x; // 当前单个字符位置
     while (*str != '\0')
@@ -296,4 +296,9 @@ void oled_win_draw_str(window_t *win, int16_t x, int16_t y, uint8_t *str)
             break;
         }
     }
+}
+
+void oled_set_display_mode(display_mode_t mode)
+{
+    oled_display_mode = mode;
 }
