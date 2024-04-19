@@ -5,3 +5,4 @@ sdkconfig.old
 managed_components/
 build/
 *.lock
+.idea

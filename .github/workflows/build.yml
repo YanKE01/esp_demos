@@ -4,112 +4,19 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    env:
-      PATHS_FILE: .github/paths.yml
-
+    strategy:
+      matrix:
+        idf_ver: ["release-v5.1"]
+    container: espressif/idf:${{matrix.idf_ver}}
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-
-    - name: http_baidu_img_classification
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/http/http_baidu_img_classification'
-
-    - name: hid_device_audio_ctrl
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/usb/device/hid_device_audio_ctrl'        
-
-    - name: esp_sr
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/audio/esp_sr'   
-
-    - name: lcd_camera_lvgl
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/ui/lvgl/lcd_camera_lvgl'   
-
-    - name: usb_host_msc
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/usb/host/msc_host'   
-
-    - name: modbus serial master
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/protocols/modbus/master/modbus_serial_master'   
-
-    - name: modbus serial slave
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/protocols/modbus/slave/modbus_serial_slave'   
-
-    - name: u8g2 oled
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/peripherals/lcd/u8g2_oled'   
-
-    - name: http aliyun tongyi
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/http/http_aliyun_tongyiqianwen'   
-
-    - name: usb cdc device
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/usb/device/cdc_device'   
-
-    - name: http baidu access token
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/http/http_baidu_access_token' 
-
-    - name: http baidu tts
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32c3
-        path: 'examples/http/http_baidu_tts' 
-
-    - name: audio max98357a
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/audio/max98357a' 
-
-    - name: audio record play
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v5.1
-        target: esp32s3
-        path: 'examples/audio/record_play' 
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - name: build esp demos
+        shell: bash
+        run: |
+          . ${IDF_PATH}/export.sh
+          pip install idf-component-manager==1.5.2 idf-build-apps --upgrade
+          idf-build-apps find -p . --recursive --target esp32s3 -vvvv
+          idf-build-apps build -p . --recursive --target esp32s3 -vvvv

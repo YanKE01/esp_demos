@@ -28,7 +28,7 @@ void app_main(void)
             x_satrt++;
         }
         win.start_x = x_satrt;
-        oled_win_draw_str(&win, 25, 5, (uint8_t *)"hello world");
+        oled_win_draw_str(&win, 25, 5, "hello world");
         oled_refersh();
         vTaskDelay(20 / portTICK_PERIOD_MS);
     }
