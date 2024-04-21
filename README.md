@@ -1,5 +1,7 @@
 # ESP Demos
 
+esp_demos is a project for learning various ESP32 features and interesting demos. This project is built on the release version of IDF 5.1.
+
 ## Support Demos:
 
 * http
@@ -7,7 +9,9 @@
   * http aliyun tongyiqianwen
   * http baidu access token
   * http baidu tts
-* ubs
+  * esp_gpt
+  * http baidu speech recognition
+* usb
   * hid device audio ctrl
   * usb host msc
 * audio
@@ -19,7 +23,12 @@
   * modbus
     * slave
     * master
+  * json parsing
 * peripherals
   * lcd
     * oled
     * u8g2 oled
+* ui
+  * lvgl
+    * lcd camera lvgl
+  * wououi
