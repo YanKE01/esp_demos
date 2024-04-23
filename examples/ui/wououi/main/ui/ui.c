@@ -172,14 +172,8 @@ void win_proc(list_page_t *list)
     // 绘制标题
     int title_x = (128 - strlen(list->win_page.title) * 6) / 2;
     oled_win_draw_str(&list->win, 25, 2, list->win_page.title);
-
     oled_win_draw_str(&list->win, 90, 2, "50");
-
-    // if (list->win_page.box_w > 89.0f)
-    // {
-    //     // 开始绘制精度条
-        oled_win_draw_box(&list->win, 22, 25, (int16_t)list->win_page.bar_w, 5, 1);
-    // }
+    oled_win_draw_box(&list->win, 22, 25, (int16_t)list->win_page.bar_w, 5, 1);
 
     // 处理回调
     if (input_state.enter)
@@ -190,7 +184,7 @@ void win_proc(list_page_t *list)
 
     if (input_state.roll)
     {
-        input_state.roll=0;
+        input_state.roll = 0;
         list->win_page.bar_w_target += 1.0f;
     }
 }

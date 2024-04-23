@@ -32,3 +32,6 @@ esp_demos is a project for learning various ESP32 features and interesting demos
   * lvgl
     * lcd camera lvgl
   * wououi
+* dl
+  * sin wave predict
+  * cifar10
