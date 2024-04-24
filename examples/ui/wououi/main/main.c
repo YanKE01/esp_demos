@@ -1,108 +1,42 @@
 #include <stdio.h>
-#include "ssd1306.h"
-#include "driver/gpio.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include "esp_log.h"
 #include "ui.h"
 #include "iot_button.h"
-#include "esp_log.h"
-
-button_handle_t btn_handle;
-static const char *TAG = "MAIN";
-
-void main_menu_cb();
-void setting_menu_cb();
 
 ssd1306_hal_config_t ssd1306_hal_config = {
-    .dc = GPIO_NUM_1,
-    .rst = GPIO_NUM_7,
+    .dc = GPIO_NUM_42,
+    .rst = GPIO_NUM_6,
     .bus.spi = {
         .clk = GPIO_NUM_5,
-        .cs = GPIO_NUM_35,
+        .cs = GPIO_NUM_41,
         .mosi = GPIO_NUM_2,
         .spi_host_num = SPI2_HOST,
     },
 };
 
-list_page_t main_menu_list_page = {
-    .ui_state = MENU,
-    .list_state = LIST,
-    .list_element = {"[ Main ]", "- Setting", "- Editor", "- Wave", "- IO Test", "- About"},
-    .index = 0,
-    .win = {0, 0, 128, 64},
-    .cb = main_menu_cb,
+list_elemt_t main_list[] = {
+    {"[ Main ]", NO_ACTION},
+    {"- Setting", ENTER_NEXT_PAGE},
+    {"- Wave", POP_WINDOW_SHOW},
+    {"~ Io Test", POP_WINDOW_SHOW},
+    {"- About", POP_WINDOW_SHOW},
 };
 
-list_page_t setting_menu_list_page = {
-    .ui_state = MENU,
-    .list_state = LIST,
-    .list_element = {"[ Setting ]", "~ Disp Bri", "~ X", "~ Y", "~ Z"},
-    .index = 1,
-    .win = {0, 0, 128, 64},
-    .cb = setting_menu_cb,
+list_elemt_t setting_list[] = {
+    {"[ Setting ]", BACK_PREV_PAGE},
+    {"~ Kp", POP_WINDOW_SHOW},
+    {"~ Ki", POP_WINDOW_SHOW},
+    {"~ Kd", POP_WINDOW_SHOW},
+    {"~ Led R", POP_WINDOW_SHOW},
+    {"~ Led G", POP_WINDOW_SHOW},
+    {"~ Led B", POP_WINDOW_SHOW},
 };
 
-list_page_t setting_bright_win_page = {
-    .ui_state = MENU,
-    .list_state = WIN,
-    .index = 2,
-    .win_page.title = "Disp Bri",
-    .win_page.max = 100,
-    .win_page.min = 10,
-    .win_page.value = 50,
-    .win = {0, 0, 128, 64},
-};
+button_handle_t btn_handle;
 
-void main_menu_cb()
-{
-    if (list_page[list_page_index].select == 1)
-    {
-        // 选中setting
-        ESP_LOGI(TAG, "Setting");
-        jump_page(1); // 跳转到Siettng
-    }
-}
-
-void setting_menu_cb()
-{
-    if (list_page[list_page_index].select == 0)
-    {
-        // 选中顶部
-        ESP_LOGI(TAG, "Back");
-        jump_page(0); // 跳转到main
-    }
-    else if (list_page[list_page_index].select == 1)
-    {
-        // 设置窗口页面
-        jump_page(2);
-    }
-}
-
-
-
-
-void ui_task(void *args)
-{
-    while (1)
-    {
-        ui_proc();
-        vTaskDelay(5 / portTICK_PERIOD_MS);
-    }
-}
-
-void short_down(void *button_handle, void *usr_data)
-{
-    input_roll_cb();
-    ESP_LOGI(TAG, "Short down");
-}
-
-void double_down(void *button_handle, void *usr_data)
-{
-    input_enter_cb();
-    ESP_LOGI(TAG, "doule down");
-}
-
-void app_main()
+void app_main(void)
 {
     ESP_ERROR_CHECK(ssd1306_init(ssd1306_hal_config));
 
@@ -117,11 +51,15 @@ void app_main()
     };
 
     btn_handle = iot_button_create(&btn_cfg);
-    iot_button_register_cb(btn_handle, BUTTON_SINGLE_CLICK, short_down, NULL);
-    iot_button_register_cb(btn_handle, BUTTON_DOUBLE_CLICK, double_down, NULL);
+    iot_button_register_cb(btn_handle, BUTTON_SINGLE_CLICK, input_set_scroll_down, NULL);
+    iot_button_register_cb(btn_handle, BUTTON_DOUBLE_CLICK, input_set_enter, NULL);
 
-    ui_add_page(main_menu_list_page);
-    ui_add_page(setting_menu_list_page);
-    ui_add_page(setting_bright_win_page);
-    xTaskCreate(ui_task, "ui", 4 * 1024, NULL, 5, NULL);
+    ui_page_add_list(0, main_list, sizeof(main_list) / sizeof(main_list[0]));
+    ui_page_add_list(1, setting_list, sizeof(setting_list) / sizeof(setting_list[0]));
+
+    while (1)
+    {
+        ui_proc();
+        vTaskDelay(pdMS_TO_TICKS(5));
+    }
 }
