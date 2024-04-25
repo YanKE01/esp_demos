@@ -72,11 +72,11 @@ void cifar10_model_init()
     output = interpreter->output(0);
 }
 
-void cifar10_model_predict(const float *pic, int size)
+void cifar10_model_predict(const uint8_t *pic, int size)
 {
     for (int i = 0; i < size; i++)
     {
-        input->data.f[i] = pic[i];
+        input->data.f[i] = pic[i] / 255.0f;
     }
 
     TfLiteStatus invoke_status = interpreter->Invoke();
