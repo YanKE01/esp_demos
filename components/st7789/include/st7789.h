@@ -5,6 +5,10 @@
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_ops.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define rgb565(r, g, b) (((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3))
 #define swap_hex(hex) ((((hex) & 0xFF) << 8) | (((hex) >> 8) & 0xFF))
 
@@ -43,3 +47,7 @@ esp_err_t lcd_init(lcd_config_t lcd_config);
  * @param color
  */
 void lcd_fullclean(esp_lcd_panel_handle_t lcd_pandel, lcd_config_t lcd_config, uint16_t color);
+
+#ifdef __cplusplus
+}
+#endif

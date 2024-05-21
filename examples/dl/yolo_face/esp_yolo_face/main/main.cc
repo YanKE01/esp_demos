@@ -49,7 +49,6 @@ extern "C" void app_main(void)
                 .out_format = JPEG_IMAGE_FORMAT_RGB888,
                 .out_scale = JPEG_IMAGE_SCALE_0,
             };
-            
             // decode jpg
             esp_jpeg_image_output_t outimage;
             esp_jpeg_decode(&jpeg_cfg, &outimage);

@@ -12,6 +12,10 @@ uint8_t tensor_arena[kTensorArenaSize];
 tflite::MicroInterpreter *interpreter = nullptr;
 TfLiteTensor *input = nullptr;
 TfLiteTensor *output = nullptr;
+uint8_t anchors[3][2] = {{9, 14}, {12, 17}, {22, 21}};
+int grid_x, grid_y;
+float x, y, w, h;
+int x_1, y_1, x_2, y_2;
 
 void model_yoloface_init()
 {
@@ -109,6 +113,12 @@ void model_yoloface_init()
     output = interpreter->output(0);
 }
 
+float sigmoid(float x)
+{
+    float y = 1 / (1 + expf(-x));
+    return y;
+}
+
 void model_yoloface_predict(uint8_t *pic, size_t size)
 {
     for (int i = 0; i < size; i++)
@@ -122,6 +132,49 @@ void model_yoloface_predict(uint8_t *pic, size_t size)
         MicroPrintf("Invoke failed on");
         return;
     }
+
+    for (int i = 0; i < 49; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            // 网络输出维度是1*7*7*18
+            // 其中18维度包含了每个像素预测的三个锚框，每个锚框对应6个维度，依次为x y w h conf class
+            // 当然因为这个网络是单类检测，所以class这一维度没有用
+            // 如果对YOLO不熟悉的话，建议去学习一下yolov3
+            int8_t conf = output->data.int8[i * 18 + j * 6 + 4];
+            // 这里的-9是根据网络量化的缩放偏移量计算的，对应的是70%的置信度
+            // sigmoid((conf+15)*0.14218327403068542) < 0.7 ==> conf > -9
+            if (conf > -9)
+            {
+                grid_x = i % 7;
+                grid_y = (i - grid_x) / 7;
+                // 这里的15和0.14218327403068542就是网络量化后给出的缩放偏移量
+                x = ((float)output->data.int8[i * 18 + j * 6] + 15) * 0.14218327403068542f;
+                y = ((float)output->data.int8[i * 18 + j * 6 + 1] + 15) * 0.14218327403068542f;
+                w = ((float)output->data.int8[i * 18 + j * 6 + 2] + 15) * 0.14218327403068542f;
+                h = ((float)output->data.int8[i * 18 + j * 6 + 3] + 15) * 0.14218327403068542f;
+                // 网络下采样三次，缩小了8倍，这里给还原回56*56的尺度
+                x = (sigmoid(x) + grid_x) * 8;
+                y = (sigmoid(y) + grid_y) * 8;
+                w = expf(w) * anchors[j][0];
+                h = expf(h) * anchors[j][1];
+                x_1 = int(x - w / 2);
+                x_2 = int(x + w / 2);
+                y_1 = int(y - h / 2);
+                y_2 = int(y + h / 2);
+                if (x_1 < 0)
+                    x_1 = 0;
+                if (y_1 < 0)
+                    y_1 = 0;
+                if (x_2 > 55)
+                    x_2 = 55;
+                if (y_2 > 55)
+                    y_2 = 55;
+            }
+        }
+    }
+
+    printf("%d %d %d %d", x_1, y_1, x_2, y_2);
 
     printf("\n");
 }
