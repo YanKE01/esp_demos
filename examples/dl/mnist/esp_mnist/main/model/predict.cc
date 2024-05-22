@@ -72,11 +72,31 @@ void mnist_model_init()
     output = interpreter->output(0);
 }
 
-void mnist_model_predict(const float *pic, size_t size)
+int find_max_index(float *array, int start, int end)
+{
+    if (start > end)
+    {
+        // 无效范围处理
+        return -1;
+    }
+
+    int maxIndex = start;
+    for (int i = start + 1; i <= end; i++)
+    {
+        if (array[i] > array[maxIndex])
+        {
+            maxIndex = i;
+        }
+    }
+
+    return maxIndex;
+}
+
+void mnist_model_predict(const uint8_t *pic, size_t size)
 {
     for (int i = 0; i < size; i++)
     {
-        input->data.f[i] = pic[i];
+        input->data.f[i] = pic[i] / 255.0f;
     }
 
     TfLiteStatus invoke_status = interpreter->Invoke();
@@ -88,7 +108,9 @@ void mnist_model_predict(const float *pic, size_t size)
 
     for (int i = 0; i < 10; i++)
     {
-        printf("%.2f  ", output->data.f[i]);
+        printf("%.3f  ", output->data.f[i]);
     }
     printf("\n");
+
+    ESP_LOGI(TAG, "%d", find_max_index(output->data.f, 0, 9));
 }

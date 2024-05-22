@@ -14,4 +14,4 @@ void mnist_model_init();
  * @param pic 
  * @param size 
  */
-void mnist_model_predict(const float *pic, size_t size);
+void mnist_model_predict(const uint8_t *pic, size_t size);
