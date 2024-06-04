@@ -6,3 +6,4 @@ managed_components/
 build/
 *.lock
 .idea
+.devcontainer/
