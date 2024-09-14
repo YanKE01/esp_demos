@@ -8,8 +8,7 @@
 #define rgb565(r, g, b) (((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3))
 #define swap_hex(hex) ((((hex) & 0xFF) << 8) | (((hex) >> 8) & 0xFF))
 
-typedef struct
-{
+typedef struct {
     uint16_t lcd_height_res;
     uint16_t lcd_vertical_res;
     uint16_t lcd_draw_buffer_height;

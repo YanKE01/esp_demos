@@ -100,27 +100,27 @@ extern "C" {
  * This just reduces memory requirements, but is not required.
  */
 #if defined(PB_NO_PACKED_STRUCTS)
-    /* Disable struct packing */
+/* Disable struct packing */
 #   define PB_PACKED_STRUCT_START
 #   define PB_PACKED_STRUCT_END
 #   define pb_packed
 #elif defined(__GNUC__) || defined(__clang__)
-    /* For GCC and clang */
+/* For GCC and clang */
 #   define PB_PACKED_STRUCT_START
 #   define PB_PACKED_STRUCT_END
 #   define pb_packed __attribute__((packed))
 #elif defined(__ICCARM__) || defined(__CC_ARM)
-    /* For IAR ARM and Keil MDK-ARM compilers */
+/* For IAR ARM and Keil MDK-ARM compilers */
 #   define PB_PACKED_STRUCT_START _Pragma("pack(push, 1)")
 #   define PB_PACKED_STRUCT_END _Pragma("pack(pop)")
 #   define pb_packed
 #elif defined(_MSC_VER) && (_MSC_VER >= 1500)
-    /* For Microsoft Visual C++ */
+/* For Microsoft Visual C++ */
 #   define PB_PACKED_STRUCT_START __pragma(pack(push, 1))
 #   define PB_PACKED_STRUCT_END __pragma(pack(pop))
 #   define pb_packed
 #else
-    /* Unknown compiler */
+/* Unknown compiler */
 #   define PB_PACKED_STRUCT_START
 #   define PB_PACKED_STRUCT_END
 #   define pb_packed
@@ -168,26 +168,26 @@ extern "C" {
 #ifndef PB_NO_STATIC_ASSERT
 #  ifndef PB_STATIC_ASSERT
 #    if defined(__ICCARM__)
-       /* IAR has static_assert keyword but no _Static_assert */
+/* IAR has static_assert keyword but no _Static_assert */
 #      define PB_STATIC_ASSERT(COND,MSG) static_assert(COND,#MSG);
 #    elif defined(_MSC_VER) && (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 201112)
-       /* MSVC in C89 mode supports static_assert() keyword anyway */
+/* MSVC in C89 mode supports static_assert() keyword anyway */
 #      define PB_STATIC_ASSERT(COND,MSG) static_assert(COND,#MSG);
 #    elif defined(PB_C99_STATIC_ASSERT)
-       /* Classic negative-size-array static assert mechanism */
+/* Classic negative-size-array static assert mechanism */
 #      define PB_STATIC_ASSERT(COND,MSG) typedef char PB_STATIC_ASSERT_MSG(MSG, __LINE__, __COUNTER__)[(COND)?1:-1];
 #      define PB_STATIC_ASSERT_MSG(MSG, LINE, COUNTER) PB_STATIC_ASSERT_MSG_(MSG, LINE, COUNTER)
 #      define PB_STATIC_ASSERT_MSG_(MSG, LINE, COUNTER) pb_static_assertion_##MSG##_##LINE##_##COUNTER
 #    elif defined(__cplusplus)
-       /* C++11 standard static_assert mechanism */
+/* C++11 standard static_assert mechanism */
 #      define PB_STATIC_ASSERT(COND,MSG) static_assert(COND,#MSG);
 #    else
-       /* C11 standard _Static_assert mechanism */
+/* C11 standard _Static_assert mechanism */
 #      define PB_STATIC_ASSERT(COND,MSG) _Static_assert(COND,#MSG);
 #    endif
 #  endif
 #else
-   /* Static asserts disabled by PB_NO_STATIC_ASSERT */
+/* Static asserts disabled by PB_NO_STATIC_ASSERT */
 #  define PB_STATIC_ASSERT(COND,MSG)
 #endif
 
@@ -293,11 +293,11 @@ typedef uint_least8_t pb_type_t;
  * and array counts.
  */
 #if defined(PB_FIELD_32BIT)
-    typedef uint32_t pb_size_t;
-    typedef int32_t pb_ssize_t;
+typedef uint32_t pb_size_t;
+typedef int32_t pb_ssize_t;
 #else
-    typedef uint_least16_t pb_size_t;
-    typedef int_least16_t pb_ssize_t;
+typedef uint_least16_t pb_size_t;
+typedef int_least16_t pb_ssize_t;
 #endif
 #define PB_SIZE_MAX ((pb_size_t)-1)
 
@@ -318,7 +318,7 @@ typedef struct pb_field_iter_s pb_field_iter_t;
 typedef struct pb_msgdesc_s pb_msgdesc_t;
 struct pb_msgdesc_s {
     const uint32_t *field_info;
-    const pb_msgdesc_t * const * submsg_info;
+    const pb_msgdesc_t *const *submsg_info;
     const pb_byte_t *default_value;
 
     bool (*field_callback)(pb_istream_t *istream, pb_ostream_t *ostream, const pb_field_iter_t *field);
@@ -402,7 +402,7 @@ struct pb_callback_s {
      */
     union {
         bool (*decode)(pb_istream_t *stream, const pb_field_t *field, void **arg);
-        bool (*encode)(pb_ostream_t *stream, const pb_field_t *field, void * const *arg);
+        bool (*encode)(pb_ostream_t *stream, const pb_field_t *field, void *const *arg);
     } funcs;
 
     /* Free arg for use by callback */
@@ -905,12 +905,11 @@ struct pb_extension_s {
 #define PB_INLINE_CONSTEXPR PB_CONSTEXPR
 #endif  // __cplusplus >= 201703L
 
-extern "C++"
-{
-namespace nanopb {
+extern "C++" {
+    namespace nanopb {
 // Each type will be partially specialized by the generator.
-template <typename GenMessageT> struct MessageDescriptor;
-}  // namespace nanopb
+    template <typename GenMessageT> struct MessageDescriptor;
+    }  // namespace nanopb
 }
 #endif  /* __cplusplus */
 

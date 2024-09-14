@@ -12,26 +12,18 @@ static int s_retry_num = 0; // retry number
 
 void app_wifi_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
-    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START)
-    {
+    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
-    }
-    else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED)
-    {
-        if (s_retry_num < 5)
-        {
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+        if (s_retry_num < 5) {
             esp_wifi_connect();
             s_retry_num++;
             ESP_LOGI(TAG, "retry to connect to the AP");
-        }
-        else
-        {
+        } else {
             xEventGroupSetBits(app_wifi_event_group, WIFI_FAIL_BIT);
         }
         ESP_LOGI(TAG, "connect to the AP fail");
-    }
-    else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP)
-    {
+    } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
         ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
@@ -68,16 +60,11 @@ void app_wifi_init(char *ssid, char *pswd)
 
     EventBits_t bits = xEventGroupWaitBits(app_wifi_event_group, WIFI_CONNECTED_BIT | WIFI_FAIL_BIT, pdFALSE, pdFALSE, portMAX_DELAY);
 
-    if (bits & WIFI_CONNECTED_BIT)
-    {
+    if (bits & WIFI_CONNECTED_BIT) {
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s", wifi_config.sta.ssid, wifi_config.sta.password);
-    }
-    else if (bits & WIFI_FAIL_BIT)
-    {
+    } else if (bits & WIFI_FAIL_BIT) {
         ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s", wifi_config.sta.ssid, wifi_config.sta.password);
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "UNEXPECTED EVENT");
     }
 }

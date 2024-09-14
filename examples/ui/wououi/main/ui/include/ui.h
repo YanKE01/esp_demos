@@ -9,27 +9,23 @@
 #define TEXT_WIDTH 6
 #define TEST_HEIGHT 8
 
-typedef enum
-{
+typedef enum {
     MENU = 0,
     LAYER_IN,
     LAYER_OUT,
 } ui_state_t;
 
-typedef enum
-{
+typedef enum {
     LIST = 0,
     WIN,
 } list_state_t;
 
-typedef struct
-{
+typedef struct {
     bool roll;  // 滚动
     bool enter; // 进入
 } input_state_t;
 
-typedef struct
-{
+typedef struct {
     char *title;
     uint8_t value;
     uint8_t max;
@@ -44,8 +40,7 @@ typedef struct
     float bar_w;
 } win_page_t;
 
-typedef struct
-{
+typedef struct {
     ui_state_t ui_state;                      // 判断当前ui状态
     list_state_t list_state;                  // 判断当前list状态
     char *list_element[MAX_LIST_ELEMENT_NUM]; // 当前list元素

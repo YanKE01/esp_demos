@@ -18,8 +18,7 @@ void app_main(void)
     status = pb_encode(&stream, SimpleMessage_fields, &message);
     message_length = stream.bytes_written;
 
-    if (!status)
-    {
+    if (!status) {
         printf("Encoding failed: %s\n", PB_GET_ERROR(&stream));
         return;
     }
@@ -29,8 +28,7 @@ void app_main(void)
     pb_istream_t stream_decode = pb_istream_from_buffer(buffer, message_length);
     status = pb_decode(&stream_decode, SimpleMessage_fields, &message_decode);
 
-    if (!status)
-    {
+    if (!status) {
         printf("Decoding failed: %s\n", PB_GET_ERROR(&stream_decode));
         return;
     }

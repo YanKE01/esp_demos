@@ -5,8 +5,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-typedef struct
-{
+typedef struct {
     uint8_t modifier;
     uint8_t reserved;
     uint8_t keycode[6];
@@ -71,7 +70,8 @@ const uint8_t hid_keyboard_report_descriptor[] = {
     HID_REPORT_COUNT(6),
     HID_REPORT_SIZE(8),
     HID_INPUT(HID_DATA | HID_ARRAY | HID_ABSOLUTE),
-    HID_COLLECTION_END};
+    HID_COLLECTION_END
+};
 
 const uint8_t hid_keyboard_configuration_descriptor[] = {
     // 配置描述符

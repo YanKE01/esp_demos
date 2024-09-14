@@ -18,8 +18,7 @@ void app_main(void)
 
     // 这里你可以将序列化的 buffer 发送到其他系统或存储起来
     // 例如，打印 buffer 的内容
-    for (unsigned i = 0; i < len; i++)
-    {
+    for (unsigned i = 0; i < len; i++) {
         printf("%02x ", buffer[i]);
     }
     printf("\n");
@@ -27,8 +26,7 @@ void app_main(void)
     // 反序列化消息
     SimpleMessage *msg_out;
     msg_out = simple_message__unpack(NULL, len, buffer);
-    if (msg_out == NULL)
-    {
+    if (msg_out == NULL) {
         fprintf(stderr, "Error unpacking incoming message\n");
         free(buffer);
     }

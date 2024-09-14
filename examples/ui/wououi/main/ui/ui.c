@@ -28,10 +28,8 @@ void ui_add_page(list_page_t list)
     list_page[list.index].list_element_count = 0;
 
     // 更新元素个数
-    for (int i = 0; i < MAX_LIST_ELEMENT_NUM; i++)
-    {
-        if (list.list_element[i] != NULL)
-        {
+    for (int i = 0; i < MAX_LIST_ELEMENT_NUM; i++) {
+        if (list.list_element[i] != NULL) {
             list_page[list.index].list_element_count++;
         }
     }
@@ -40,12 +38,12 @@ void ui_add_page(list_page_t list)
 
 void animation(float *a, float *a_trg, int n)
 {
-    if (*a != *a_trg)
-    {
-        if (fabs(*a - *a_trg) < 0.15f)
+    if (*a != *a_trg) {
+        if (fabs(*a - *a_trg) < 0.15f) {
             *a = *a_trg;
-        else
+        } else {
             *a += (*a_trg - *a) / (n / 10.0f);
+        }
     }
 }
 
@@ -62,8 +60,7 @@ void animation_pd(float *a, float *a_trg, float kp, float kd)
 
 void list_proc(list_page_t *list)
 {
-    if (list->init_flag == 0)
-    {
+    if (list->init_flag == 0) {
         list->init_flag = 1;
         list->oper_flag = 1;
         list->win_start_x = -1.0f * WIDTH;
@@ -72,8 +69,7 @@ void list_proc(list_page_t *list)
         list->win_text_y_target = 0.0f;
     }
 
-    if (list->oper_flag)
-    {
+    if (list->oper_flag) {
         oled_set_display_mode(INVERSE);
         list->oper_flag = 0;
         list->select_box_w = 0.0f;
@@ -87,10 +83,8 @@ void list_proc(list_page_t *list)
     list->win.start_x = (int16_t)list->win_start_x;
 
     // 绘制列表
-    for (int i = 0; i < MAX_LIST_ELEMENT_NUM; i++)
-    {
-        if (list->list_element[i] != NULL)
-        {
+    for (int i = 0; i < MAX_LIST_ELEMENT_NUM; i++) {
+        if (list->list_element[i] != NULL) {
             oled_win_draw_str(&list->win, 0, LIST_HEIGHT_SPACING * i + LIST_TOP_WIDTH + list->win_text_y, list->list_element[i]);
         }
     }
@@ -98,13 +92,11 @@ void list_proc(list_page_t *list)
     oled_win_draw_box(&list->win, 0, (int16_t)list->select_box_y, (int16_t)list->select_box_w, LIST_HEIGHT_SPACING, 1);
 
     // 处理按键状态
-    if (input_state.roll)
-    {
+    if (input_state.roll) {
         input_state.roll = 0; // 清除状态
         list->oper_flag = 1;  // 在此进入oper状态，更新选中框长度
 
-        if (list->select == list->list_element_count - 1)
-        {
+        if (list->select == list->list_element_count - 1) {
             // 表明选中框已经选中到了最后一个，直接返回顶部
             list->select_box_y_target = 0.0f; // 选中框回到顶部
             list->win_text_y_target = 0.0f;   // 文字回到顶部
@@ -112,13 +104,10 @@ void list_proc(list_page_t *list)
             return;
         }
 
-        if (list->select_box_y_target == HEIGHT - LIST_HEIGHT_SPACING)
-        {
+        if (list->select_box_y_target == HEIGHT - LIST_HEIGHT_SPACING) {
             // 此时选中框已经到达了当前页面的外面，应该让text的y上移动
             list->win_text_y_target -= LIST_HEIGHT_SPACING;
-        }
-        else
-        {
+        } else {
             list->select_box_y_target += LIST_HEIGHT_SPACING;
         }
         list->select++; // 滚动键按下后，对应的选中索引++
@@ -126,11 +115,9 @@ void list_proc(list_page_t *list)
 
     // 处理回调函数
 
-    if (input_state.enter)
-    {
+    if (input_state.enter) {
         input_state.enter = 0;
-        if (list->cb != NULL)
-        {
+        if (list->cb != NULL) {
             list->cb();
         }
     }
@@ -138,8 +125,7 @@ void list_proc(list_page_t *list)
 
 void win_proc(list_page_t *list)
 {
-    if (list->init_flag == 0)
-    {
+    if (list->init_flag == 0) {
         list->init_flag = 1;
         list->oper_flag = 1;
         list->win_page.box_w = 0.0f;
@@ -155,10 +141,8 @@ void win_proc(list_page_t *list)
     animation_pd(&list->win_page.bar_w, &list->win_page.bar_w_target, 0.05f, 0.01f);
 
     // 这里需要知道前一个是哪一个，我这里直接用--，线绘制背景
-    for (int i = 0; i < MAX_LIST_ELEMENT_NUM; i++)
-    {
-        if (list_page[list->index - 1].list_element[i] != NULL)
-        {
+    for (int i = 0; i < MAX_LIST_ELEMENT_NUM; i++) {
+        if (list_page[list->index - 1].list_element[i] != NULL) {
             oled_win_draw_str(&list->win, 0, LIST_HEIGHT_SPACING * i + LIST_TOP_WIDTH, list_page[1].list_element[i]);
         }
     }
@@ -176,14 +160,12 @@ void win_proc(list_page_t *list)
     oled_win_draw_box(&list->win, 22, 25, (int16_t)list->win_page.bar_w, 5, 1);
 
     // 处理回调
-    if (input_state.enter)
-    {
+    if (input_state.enter) {
         input_state.enter = 0;
         jump_page(list->index - 1);
     }
 
-    if (input_state.roll)
-    {
+    if (input_state.roll) {
         input_state.roll = 0;
         list->win_page.bar_w_target += 1.0f;
     }
@@ -192,8 +174,7 @@ void win_proc(list_page_t *list)
 void jump_page(int index)
 {
     list_page_index = index;
-    if (list_page[list_page_index].list_state != WIN)
-    {
+    if (list_page[list_page_index].list_state != WIN) {
         list_page[list_page_index].ui_state = LAYER_IN; // 进入到LAYER IN状态
     }
 }
@@ -202,41 +183,32 @@ void animation_fade()
 {
     static uint8_t fade_count = 0;
 
-    switch (fade_count)
-    {
+    switch (fade_count) {
     case 0:
-        for (int i = 0; i < HEIGHT / 8; i++)
-        {
-            for (int j = 0; j < WIDTH; j += 2)
-            {
+        for (int i = 0; i < HEIGHT / 8; i++) {
+            for (int j = 0; j < WIDTH; j += 2) {
                 oled_buffer[i][j] &= 0xAA;
             }
         }
         break;
     case 1:
-        for (int i = 0; i < HEIGHT / 8; i++)
-        {
-            for (int j = 0; j < WIDTH; j += 2)
-            {
+        for (int i = 0; i < HEIGHT / 8; i++) {
+            for (int j = 0; j < WIDTH; j += 2) {
                 oled_buffer[i][j] &= 0x00;
             }
         }
         break;
     case 2:
-        for (int i = 0; i < HEIGHT / 8; i++)
-        {
-            for (int j = 1; j < WIDTH; j += 2)
-            {
+        for (int i = 0; i < HEIGHT / 8; i++) {
+            for (int j = 1; j < WIDTH; j += 2) {
                 oled_buffer[i][j] &= 0x55;
             }
         }
         break;
 
     case 3:
-        for (int i = 0; i < HEIGHT / 8; i++)
-        {
-            for (int j = 1; j < WIDTH; j += 2)
-            {
+        for (int i = 0; i < HEIGHT / 8; i++) {
+            for (int j = 1; j < WIDTH; j += 2) {
                 oled_buffer[i][j] &= 0x00;
             }
         }
@@ -253,8 +225,7 @@ void animation_fade()
 
 void ui_proc()
 {
-    if (list_page_index < 0)
-    {
+    if (list_page_index < 0) {
         // 当前无界面
         ESP_LOGI(TAG, "Please Add Page");
         return;
@@ -262,13 +233,11 @@ void ui_proc()
 
     oled_refersh();
     list_page_t *currnt_list_page = &list_page[list_page_index]; // 当前页面
-    switch (currnt_list_page->ui_state)
-    {
+    switch (currnt_list_page->ui_state) {
     case MENU:
         oled_clear();
 
-        switch (currnt_list_page->list_state)
-        {
+        switch (currnt_list_page->list_state) {
         case LIST:
             list_proc(currnt_list_page);
             break;

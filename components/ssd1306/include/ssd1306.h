@@ -6,19 +6,15 @@
 #define WIDTH 128
 #define HEIGHT 64
 
-typedef struct
-{
-    union
-    {
-        struct
-        {
+typedef struct {
+    union {
+        struct {
             gpio_num_t clk;
             gpio_num_t mosi;
             gpio_num_t cs;
             spi_host_device_t spi_host_num;
         } spi;
-        struct
-        {
+        struct {
             gpio_num_t scl;
             gpio_num_t sda;
         } i2c;
@@ -27,15 +23,13 @@ typedef struct
     gpio_num_t dc;
 } ssd1306_hal_config_t;
 
-typedef enum
-{
+typedef enum {
     NORMAL = 0, // 正常显示
     NO,         // 不显示
     INVERSE     // 反色显示
 } display_mode_t;
 
-typedef struct
-{
+typedef struct {
     int16_t start_x;
     int16_t start_y;
     int16_t w;

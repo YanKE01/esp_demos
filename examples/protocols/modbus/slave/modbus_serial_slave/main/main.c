@@ -12,20 +12,17 @@ mb_communication_info_t comm_info;
 mb_param_info_t reg_info;
 static const char *TAG = "MODBUS";
 
-typedef struct
-{
+typedef struct {
     uint8_t discrete_input_0 : 1;
     uint8_t discrete_input_1 : 1;
 } discrete_reg_params_t;
 
-typedef struct
-{
+typedef struct {
     uint8_t coils_port_0 : 1;
     uint8_t coils_port_1 : 1;
 } coil_reg_params_t;
 
-typedef struct
-{
+typedef struct {
     uint16_t holding_0;
     uint16_t holding_1;
 } holding_reg_params_t;
@@ -50,7 +47,7 @@ void app_main(void)
     mb_register_area_descriptor_t descrete_reg_area = {
         .type = MB_PARAM_DISCRETE,
         .start_offset = 0x0000,
-        .address = (void *)&discrete_reg_params,
+        .address = (void *) &discrete_reg_params,
         .size = sizeof(discrete_reg_params_t),
     };
     ESP_ERROR_CHECK(mbc_slave_set_descriptor(descrete_reg_area));
@@ -59,7 +56,7 @@ void app_main(void)
     mb_register_area_descriptor_t coil_reg_area = {
         .type = MB_PARAM_COIL,
         .start_offset = 0x0000,
-        .address = (void *)&coil_reg_params,
+        .address = (void *) &coil_reg_params,
         .size = sizeof(coil_reg_params_t),
     };
     ESP_ERROR_CHECK(mbc_slave_set_descriptor(coil_reg_area));
@@ -68,7 +65,7 @@ void app_main(void)
     mb_register_area_descriptor_t holding_reg_area = {
         .type = MB_PARAM_HOLDING,
         .start_offset = 0x0000,
-        .address = (void *)&holding_reg_params,
+        .address = (void *) &holding_reg_params,
         .size = sizeof(holding_reg_params_t),
     };
     ESP_ERROR_CHECK(mbc_slave_set_descriptor(holding_reg_area));
@@ -80,34 +77,24 @@ void app_main(void)
     ESP_ERROR_CHECK(uart_set_pin(UART_NUM_2, 9, 8, -1, UART_PIN_NO_CHANGE));
     ESP_ERROR_CHECK(uart_set_mode(UART_NUM_2, UART_MODE_UART));
 
-    while (1)
-    {
+    while (1) {
         mb_event_group_t event = mbc_slave_check_event(MB_READ_WRITE_MASK);
 
-        if (event & MB_EVENT_DISCRETE_RD)
-        {
+        if (event & MB_EVENT_DISCRETE_RD) {
             // 主机读取离散输入寄存器
             ESP_ERROR_CHECK(mbc_slave_get_param_info(&reg_info, 10));
             ESP_LOGI(TAG, "DISCRETE READ");
-        }
-        else if (event & MB_EVENT_COILS_RD)
-        {
+        } else if (event & MB_EVENT_COILS_RD) {
             // 主机读取线圈
             ESP_LOGI(TAG, "COIL READ");
-        }
-        else if (event & MB_EVENT_COILS_WR)
-        {
+        } else if (event & MB_EVENT_COILS_WR) {
             // 主机写线圈
             ESP_LOGI(TAG, "COIL WRITE");
             ESP_LOGI(TAG, "Coil: %d %d", coil_reg_params.coils_port_0, coil_reg_params.coils_port_1);
-        }
-        else if (event & MB_EVENT_HOLDING_REG_RD)
-        {
+        } else if (event & MB_EVENT_HOLDING_REG_RD) {
             // 主机读取保持寄存器
             ESP_LOGI(TAG, "HOLDING READ");
-        }
-        else if (event & MB_EVENT_HOLDING_REG_WR)
-        {
+        } else if (event & MB_EVENT_HOLDING_REG_WR) {
             // 主机写保持寄存器
             ESP_LOGI(TAG, "HOLDING WRITE");
             ESP_LOGI(TAG, "Holding: %d %d", holding_reg_params.holding_0, holding_reg_params.holding_1);

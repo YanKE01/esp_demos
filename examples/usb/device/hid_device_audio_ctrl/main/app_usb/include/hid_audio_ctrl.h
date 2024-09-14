@@ -9,8 +9,8 @@ extern const uint8_t hid_device_audio_ctrl_report_descriptor[];
 
 /**
  * @brief test audio ctrl
- * 
- * @return true 
- * @return false 
+ *
+ * @return true
+ * @return false
  */
 bool hid_device_audio_ctrl();

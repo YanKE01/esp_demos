@@ -23,10 +23,9 @@ typedef struct _SimpleMessage SimpleMessage;
 
 /* --- messages --- */
 
-struct  _SimpleMessage
-{
-  ProtobufCMessage base;
-  int32_t lucky_number;
+struct  _SimpleMessage {
+    ProtobufCMessage base;
+    int32_t lucky_number;
 };
 #define SIMPLE_MESSAGE__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&simple_message__descriptor) \
@@ -35,28 +34,28 @@ struct  _SimpleMessage
 
 /* SimpleMessage methods */
 void   simple_message__init
-                     (SimpleMessage         *message);
+(SimpleMessage         *message);
 size_t simple_message__get_packed_size
-                     (const SimpleMessage   *message);
+(const SimpleMessage   *message);
 size_t simple_message__pack
-                     (const SimpleMessage   *message,
-                      uint8_t             *out);
+(const SimpleMessage   *message,
+ uint8_t             *out);
 size_t simple_message__pack_to_buffer
-                     (const SimpleMessage   *message,
-                      ProtobufCBuffer     *buffer);
+(const SimpleMessage   *message,
+ ProtobufCBuffer     *buffer);
 SimpleMessage *
-       simple_message__unpack
-                     (ProtobufCAllocator  *allocator,
-                      size_t               len,
-                      const uint8_t       *data);
+simple_message__unpack
+(ProtobufCAllocator  *allocator,
+ size_t               len,
+ const uint8_t       *data);
 void   simple_message__free_unpacked
-                     (SimpleMessage *message,
-                      ProtobufCAllocator *allocator);
+(SimpleMessage *message,
+ ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
 typedef void (*SimpleMessage_Closure)
-                 (const SimpleMessage *message,
-                  void *closure_data);
+(const SimpleMessage *message,
+ void *closure_data);
 
 /* --- services --- */
 

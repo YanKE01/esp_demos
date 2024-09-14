@@ -36,7 +36,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
 void boot_btn_pressdown_cb(void *button_handle, void *usr_data)
 {
-    ESP_LOGI(TAG, "Report result:%d",hid_device_audio_ctrl());
+    ESP_LOGI(TAG, "Report result:%d", hid_device_audio_ctrl());
 }
 
 void app_main(void)

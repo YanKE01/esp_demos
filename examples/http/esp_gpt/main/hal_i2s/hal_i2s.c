@@ -82,37 +82,30 @@ void hal_i2s_record(char *file_path, int record_time)
 
     // 判断文件是否存在
     struct stat st;
-    if (stat(file_path, &st) == 0)
-    {
+    if (stat(file_path, &st) == 0) {
         ESP_LOGI(TAG, "%s exit", file_path);
         unlink(file_path); // 如果存在就删除
     }
 
     // 创建WAV文件
     FILE *f = fopen(file_path, "a");
-    if (f == NULL)
-    {
+    if (f == NULL) {
         ESP_LOGI(TAG, "Failed to open file");
         return;
     }
     fwrite(&wav_header, sizeof(wav_header), 1, f);
 
-    while (record_info.flash_wr_size < record_info.bytes_all)
-    {
+    while (record_info.flash_wr_size < record_info.bytes_all) {
         char *i2s_raw_buffer = heap_caps_calloc(1, record_info.sample_size, MALLOC_CAP_SPIRAM);
-        if (i2s_raw_buffer == NULL)
-        {
+        if (i2s_raw_buffer == NULL) {
             continue;
         }
 
         // Malloc success
-        if (i2s_channel_read(rx_handle, i2s_raw_buffer, record_info.sample_size, &record_info.read_size, 100) == ESP_OK)
-        {
+        if (i2s_channel_read(rx_handle, i2s_raw_buffer, record_info.sample_size, &record_info.read_size, 100) == ESP_OK) {
             fwrite(i2s_raw_buffer, record_info.read_size, 1, f);
             record_info.flash_wr_size += record_info.read_size;
-        }
-        else
-        {
+        } else {
             ESP_LOGI(TAG, "Read Failed!\n");
         }
         free(i2s_raw_buffer);

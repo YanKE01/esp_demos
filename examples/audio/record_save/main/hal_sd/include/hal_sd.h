@@ -5,8 +5,7 @@
 #include "sdmmc_cmd.h"
 #include "driver/gpio.h"
 
-typedef struct
-{
+typedef struct {
     char *mount_path;
     gpio_num_t clk_pin;
     gpio_num_t cmd_pin;
@@ -14,4 +13,3 @@ typedef struct
 } hal_sd_spi_config_t;
 
 esp_err_t hal_sd_init(hal_sd_spi_config_t config);
-

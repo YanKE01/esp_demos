@@ -18,8 +18,7 @@ void app_main(void)
     };
     ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
 
-    while (1)
-    {
+    while (1) {
         keyboard_win_test();
         vTaskDelay(pdMS_TO_TICKS(1000));
     }

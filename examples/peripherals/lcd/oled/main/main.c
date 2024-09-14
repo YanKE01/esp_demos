@@ -20,11 +20,9 @@ void app_main(void)
     int x_satrt = -100;
     ESP_ERROR_CHECK(ssd1306_init(ssd1306_hal_config));
     window_t win = {x_satrt, 0, 128, 64};
-    while (1)
-    {
+    while (1) {
         oled_clear();
-        if (x_satrt < 0)
-        {
+        if (x_satrt < 0) {
             x_satrt++;
         }
         win.start_x = x_satrt;

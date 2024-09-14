@@ -2,8 +2,7 @@
 
 #include "led_strip.h"
 
-typedef struct
-{
+typedef struct {
     bool is_light;
     uint8_t r;
     uint8_t g;

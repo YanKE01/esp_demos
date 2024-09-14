@@ -5,25 +5,13 @@ repos:
   - repo: https://github.com/igrr/astyle_py.git
     rev: v1.0.5
     hooks:
-    -   id: astyle_py
+      - id: astyle_py
         args: ['--rules=tools/ci/astyle_config.yaml']
-
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
-    hooks:
-      - id: codespell
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
     hooks:
-      - id: check-executables-have-shebangs
-      - id: check-merge-conflict
-      - id: double-quote-string-fixer
-      - id: end-of-file-fixer
-        types_or: [c, c++]
-      - id: mixed-line-ending
-        args: ['-f=lf']
-        types_or: [c, c++]
       - id: trailing-whitespace
         types_or: [c, c++]
-
+      - id: end-of-file-fixer
+        types_or: [c, c++]

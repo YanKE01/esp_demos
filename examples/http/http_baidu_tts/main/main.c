@@ -23,8 +23,7 @@ i2s_chan_handle_t i2s_tx_chan;
 
 esp_err_t app_http_baidu_tts_event_handler(esp_http_client_event_t *evt)
 {
-    if (evt->event_id == HTTP_EVENT_ON_DATA)
-    {
+    if (evt->event_id == HTTP_EVENT_ON_DATA) {
         ESP_LOGI(TAG, "Received length:%d", evt->data_len);
         i2s_channel_write(i2s_tx_chan, (char *)evt->data, evt->data_len, NULL, 100);
     }
@@ -38,8 +37,7 @@ void app_main(void)
 
     // Init NVS
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-    {
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
@@ -71,8 +69,7 @@ void app_main(void)
 
     char *text_url_encode = heap_caps_calloc(1, text_url_encode_size + 1, MALLOC_CAP_DMA);
 
-    if (text_url_encode == NULL)
-    {
+    if (text_url_encode == NULL) {
         ESP_LOGI(TAG, "Malloc text url encode failed");
         return;
     }
@@ -81,8 +78,7 @@ void app_main(void)
 
     char *payload = heap_caps_calloc(1, strlen(formate) + strlen(access_token) + strlen(text_url_encode) + 1, MALLOC_CAP_DMA);
 
-    if (payload == NULL)
-    {
+    if (payload == NULL) {
         free(text_url_encode);
         ESP_LOGI(TAG, "Malloc payload failed");
         return;
@@ -92,12 +88,9 @@ void app_main(void)
     esp_http_client_set_post_field(client, payload, strlen(payload));
 
     esp_err_t err = esp_http_client_perform(client);
-    if (err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %d", esp_http_client_get_status_code(client), (int)esp_http_client_get_content_length(client));
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
     }
     esp_http_client_cleanup(client);

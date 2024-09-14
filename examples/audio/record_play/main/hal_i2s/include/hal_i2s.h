@@ -6,8 +6,7 @@
 #include "driver/gpio.h"
 #include "driver/i2s_pdm.h"
 
-typedef struct
-{
+typedef struct {
     uint16_t sample_rate;
     uint16_t bits_per_sample;
     gpio_num_t ws_pin;
@@ -16,8 +15,7 @@ typedef struct
     i2s_port_t i2s_num;
 } i2s_microphone_config_t;
 
-typedef struct
-{
+typedef struct {
     uint16_t sample_rate;
     uint16_t bits_per_sample;
     gpio_num_t ws_pin;

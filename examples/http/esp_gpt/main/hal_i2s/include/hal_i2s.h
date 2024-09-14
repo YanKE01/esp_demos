@@ -6,8 +6,7 @@
 #include "driver/gpio.h"
 #include "driver/i2s_pdm.h"
 
-typedef struct
-{
+typedef struct {
     uint16_t sample_rate;
     uint16_t bits_per_sample;
     gpio_num_t ws_pin;
@@ -16,8 +15,7 @@ typedef struct
     i2s_port_t i2s_num;
 } i2s_microphone_config_t;
 
-typedef struct
-{
+typedef struct {
     uint16_t sample_rate;
     uint16_t bits_per_sample;
     gpio_num_t ws_pin;
@@ -26,8 +24,7 @@ typedef struct
     i2s_port_t i2s_num;
 } i2s_speaker_config_t;
 
-typedef struct
-{
+typedef struct {
     i2s_microphone_config_t i2s_config; // i2s的配置信息
     int byte_rate;                      // 1s下的采样数据
     int bytes_all;                      // 录音时间下的所有数据大小

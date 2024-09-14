@@ -27,22 +27,16 @@ esp_err_t app_sr_init(char *model_partition_label)
 {
     models = esp_srmodel_init(model_partition_label);
     char *wn_name = NULL;
-    if (models != NULL)
-    {
-        for (int i = 0; i < models->num; i++)
-        {
-            if (strstr(models->model_name[i], ESP_WN_PREFIX) != NULL)
-            {
-                if (wn_name == NULL)
-                {
+    if (models != NULL) {
+        for (int i = 0; i < models->num; i++) {
+            if (strstr(models->model_name[i], ESP_WN_PREFIX) != NULL) {
+                if (wn_name == NULL) {
                     wn_name = models->model_name[i];
                     ESP_LOGI(TAG, "The wakenet model: %s", wn_name);
                 }
             }
         }
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "Please enable wakenet model and select wake word by menuconfig!");
         return ESP_FAIL;
     }
@@ -72,8 +66,7 @@ void app_sr_feed_task(void *arg)
     int16_t *i2s_buff = malloc(audio_chunksize * sizeof(int16_t) * feed_channel);
     assert(i2s_buff);
 
-    while (1)
-    {
+    while (1) {
         size_t buffer_len = audio_chunksize * sizeof(int16_t) * feed_channel;
         hal_i2s_get_data(i2s_buff, buffer_len);
         afe_handle->feed(afe_data, i2s_buff);
@@ -104,43 +97,33 @@ void app_sr_detect_task(void *arg)
 
     esp_mn_commands_update();
 
-    while (1)
-    {
+    while (1) {
         afe_fetch_result_t *res = afe_handle->fetch(afe_data);
-        if (!res || res->ret_value == ESP_FAIL)
-        {
+        if (!res || res->ret_value == ESP_FAIL) {
             ESP_LOGI(TAG, "fetch error!");
             break;
         }
 
-        if (res->wakeup_state == WAKENET_DETECTED)
-        {
+        if (res->wakeup_state == WAKENET_DETECTED) {
             ESP_LOGI(TAG, "WAKEWORD DETECTED");
             multinet->clean(model_data); // clean all status of multinet
-        }
-        else if (res->wakeup_state == WAKENET_CHANNEL_VERIFIED)
-        {
+        } else if (res->wakeup_state == WAKENET_CHANNEL_VERIFIED) {
             detect_flag = 1;
             ESP_LOGI(TAG, "AFE_FETCH_CHANNEL_VERIFIED, channel index: %d", res->trigger_channel_id);
         }
 
-        if (detect_flag == 1)
-        {
+        if (detect_flag == 1) {
             esp_mn_state_t mn_state = multinet->detect(model_data, res->data);
 
-            if (mn_state == ESP_MN_STATE_DETECTING)
-            {
+            if (mn_state == ESP_MN_STATE_DETECTING) {
                 continue;
             }
 
-            if (mn_state == ESP_MN_STATE_DETECTED)
-            {
+            if (mn_state == ESP_MN_STATE_DETECTED) {
                 esp_mn_results_t *mn_result = multinet->get_results(model_data);
-                for (int i = 0; i < mn_result->num; i++)
-                {
+                for (int i = 0; i < mn_result->num; i++) {
                     ESP_LOGI(TAG, "TOP %d, command_id: %d, phrase_id: %d, string:%s prob: %f", i + 1, mn_result->command_id[i], mn_result->phrase_id[i], mn_result->string, mn_result->prob[i]);
-                    if (mn_result->command_id[i] >= 1000 && mn_result->command_id[i] <= 1007)
-                    {
+                    if (mn_result->command_id[i] >= 1000 && mn_result->command_id[i] <= 1007) {
                         // 个人指令
                         app_led_config.command = mn_result->command_id[i] - 1000;
                         continue;
@@ -150,8 +133,7 @@ void app_sr_detect_task(void *arg)
                 ESP_LOGI(TAG, "listening ........");
             }
 
-            if (mn_state == ESP_MN_STATE_TIMEOUT)
-            {
+            if (mn_state == ESP_MN_STATE_TIMEOUT) {
                 esp_mn_results_t *mn_result = multinet->get_results(model_data);
                 ESP_LOGI(TAG, "timeout, string:%s", mn_result->string);
                 afe_handle->enable_wakenet(afe_data);

@@ -9,8 +9,7 @@ void app_main(void)
     int win_length = (int)(0.02 * 16000);
     float window[win_length];
 
-    for (int i = 0; i < win_length; i++)
-    {
+    for (int i = 0; i < win_length; i++) {
         window[i] = 1.0f;
     }
 
@@ -23,11 +22,9 @@ void app_main(void)
 
     printf("MFCC calculation successful. Number of frames: %d\n", n_frames);
     printf("MFCC results:\n");
-    for (int i = 0; i < n_frames; ++i)
-    {
+    for (int i = 0; i < n_frames; ++i) {
         printf("Frame %d: ", i);
-        for (int j = 0; j < num_cep; ++j)
-        {
+        for (int j = 0; j < num_cep; ++j) {
             printf("%f ", result[i * num_cep + j]);
         }
         printf("\n");

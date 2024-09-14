@@ -12,8 +12,7 @@ char base_url[256] = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanc
 
 esp_err_t app_http_baidu_event_handler(esp_http_client_event_t *evt)
 {
-    if (evt->event_id == HTTP_EVENT_ON_DATA)
-    {
+    if (evt->event_id == HTTP_EVENT_ON_DATA) {
         ESP_LOGI(TAG, "%.*s", evt->data_len, (char *)evt->data);
     }
 
@@ -25,48 +24,35 @@ int url_encode(const unsigned char *src, size_t slen, size_t *olen, unsigned cha
     size_t i, j = 0;
 
     // clac encoed size
-    for (i = 0; i < slen; i++)
-    {
+    for (i = 0; i < slen; i++) {
         if ((src[i] >= 'A' && src[i] <= 'Z') ||
-            (src[i] >= 'a' && src[i] <= 'z') ||
-            (src[i] >= '0' && src[i] <= '9') ||
-            src[i] == '-' || src[i] == '_' || src[i] == '.' || src[i] == '~')
-        {
+                (src[i] >= 'a' && src[i] <= 'z') ||
+                (src[i] >= '0' && src[i] <= '9') ||
+                src[i] == '-' || src[i] == '_' || src[i] == '.' || src[i] == '~') {
             j++;
-        }
-        else if (src[i] == ' ')
-        {
+        } else if (src[i] == ' ') {
             j++;
-        }
-        else
-        {
+        } else {
             j += 3; // length of %xx is three
         }
     }
 
     // check buffer size
-    if (dlen < j + 1)
-    {
+    if (dlen < j + 1) {
         *olen = j + 1; // reytun need size
         return -1;
     }
 
     // url encode
-    for (i = 0, j = 0; i < slen; i++)
-    {
+    for (i = 0, j = 0; i < slen; i++) {
         if ((src[i] >= 'A' && src[i] <= 'Z') ||
-            (src[i] >= 'a' && src[i] <= 'z') ||
-            (src[i] >= '0' && src[i] <= '9') ||
-            src[i] == '-' || src[i] == '_' || src[i] == '.' || src[i] == '~')
-        {
+                (src[i] >= 'a' && src[i] <= 'z') ||
+                (src[i] >= '0' && src[i] <= '9') ||
+                src[i] == '-' || src[i] == '_' || src[i] == '.' || src[i] == '~') {
             dst[j++] = src[i];
-        }
-        else if (src[i] == ' ')
-        {
+        } else if (src[i] == ' ') {
             dst[j++] = '+';
-        }
-        else
-        {
+        } else {
             dst[j++] = '%';
             dst[j++] = "0123456789ABCDEF"[src[i] >> 4];
             dst[j++] = "0123456789ABCDEF"[src[i] & 0x0F];
@@ -98,8 +84,7 @@ void app_baidu_classification(char *img_buf, int file_size)
     ESP_LOGI(TAG, "Image size after bash64:%zu", img_base64_size);
 
     img_base64 = heap_caps_calloc(1, img_base64_size + 1, MALLOC_CAP_DMA);
-    if (img_base64 == NULL)
-    {
+    if (img_base64 == NULL) {
         ESP_LOGI(TAG, "Memory image bash64 allocation failed");
         return;
     }
@@ -110,8 +95,7 @@ void app_baidu_classification(char *img_buf, int file_size)
     ESP_LOGI(TAG, "Image size after url:%zu", img_base64_url_size);
 
     img_base64_url = heap_caps_calloc(1, img_base64_url_size + 1, MALLOC_CAP_DMA);
-    if (img_base64_url == NULL)
-    {
+    if (img_base64_url == NULL) {
         ESP_LOGI(TAG, "Memory image bash64 url allocation failed");
         free(img_base64);
         return;
@@ -120,8 +104,7 @@ void app_baidu_classification(char *img_buf, int file_size)
 
     // set data params
     img_params = heap_caps_calloc(1, img_base64_url_size + 1 + strlen(img_params_format), MALLOC_CAP_DMA);
-    if (img_params == NULL)
-    {
+    if (img_params == NULL) {
         ESP_LOGI(TAG, "Memory image params allocation failed");
         free(img_base64);
         free(img_base64_url);
@@ -145,12 +128,9 @@ void app_baidu_classification(char *img_buf, int file_size)
     esp_http_client_set_post_field(client, img_params, strlen(img_params));
     esp_http_client_set_header(client, "Content-Type", "application/x-www-form-urlencoded");
     esp_err_t err = esp_http_client_perform(client);
-    if (err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %d", esp_http_client_get_status_code(client), (int)esp_http_client_get_content_length(client));
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
     }
     esp_http_client_cleanup(client);

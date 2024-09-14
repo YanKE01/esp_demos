@@ -10,24 +10,17 @@ void app_main(void)
     jparse_ctx_t jctx;
     int num_elem = 0;
     int ret = json_parse_start(&jctx, json_str, strlen(json_str));
-    if (ret != OS_SUCCESS)
-    {
+    if (ret != OS_SUCCESS) {
         printf("Parser failed\n");
         return;
     }
 
-    if (json_obj_get_object(&jctx, "output") == OS_SUCCESS)
-    {
-        if (json_obj_get_array(&jctx, "choices", &num_elem) == OS_SUCCESS)
-        {
-            for (int i = 0; i < num_elem; i++)
-            {
-                if (json_arr_get_object(&jctx, i) == OS_SUCCESS)
-                {
-                    if (json_obj_get_object(&jctx, "message") == OS_SUCCESS)
-                    {
-                        if (json_obj_get_string(&jctx, "content", result, sizeof(result)) == OS_SUCCESS)
-                        {
+    if (json_obj_get_object(&jctx, "output") == OS_SUCCESS) {
+        if (json_obj_get_array(&jctx, "choices", &num_elem) == OS_SUCCESS) {
+            for (int i = 0; i < num_elem; i++) {
+                if (json_arr_get_object(&jctx, i) == OS_SUCCESS) {
+                    if (json_obj_get_object(&jctx, "message") == OS_SUCCESS) {
+                        if (json_obj_get_string(&jctx, "content", result, sizeof(result)) == OS_SUCCESS) {
                             printf("%s\n", result);
                         }
                     }

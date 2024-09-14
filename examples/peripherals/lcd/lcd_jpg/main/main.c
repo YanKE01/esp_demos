@@ -36,23 +36,20 @@ void app_main(void)
 
     // read pic
     struct stat st;
-    if (stat(filename, &st) == 0)
-    {
+    if (stat(filename, &st) == 0) {
         ESP_LOGI(TAG, "File %s size is %ld\n", filename, st.st_size);
 
         uint32_t filesize = (uint32_t)st.st_size; // read pic size
         char *file_buf = heap_caps_malloc(filesize + 1, MALLOC_CAP_DMA);
 
-        if (file_buf == NULL)
-        {
+        if (file_buf == NULL) {
             ESP_LOGI(TAG, "Malloc file buffer fail");
             return;
         }
 
         int f = open(filename, O_RDONLY);
 
-        if (f > 0)
-        {
+        if (f > 0) {
             read(f, file_buf, filesize);
             ESP_LOGI(TAG, "Decode jpg");
             size_t pic_buf_size = 240 * 240 * sizeof(uint16_t);
@@ -79,9 +76,7 @@ void app_main(void)
         }
 
         free(file_buf);
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "Read Size Fail");
     }
 }

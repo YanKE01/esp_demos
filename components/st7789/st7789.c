@@ -63,12 +63,10 @@ esp_err_t lcd_init(lcd_config_t lcd_config)
     return ESP_OK;
 
 err:
-    if (lcd_panel)
-    {
+    if (lcd_panel) {
         esp_lcd_panel_del(lcd_panel);
     }
-    if (lcd_io)
-    {
+    if (lcd_io) {
         esp_lcd_panel_io_del(lcd_io);
     }
     spi_bus_free(lcd_config.spi_host_device);
@@ -79,12 +77,10 @@ void lcd_fullclean(esp_lcd_panel_handle_t lcd_pandel, lcd_config_t lcd_config, u
 {
     uint16_t *buffer = heap_caps_malloc(lcd_config.lcd_height_res * sizeof(uint16_t), MALLOC_CAP_INTERNAL);
 
-    for (int i = 0; i < lcd_config.lcd_height_res; i++)
-    {
+    for (int i = 0; i < lcd_config.lcd_height_res; i++) {
         buffer[i] = swap_hex(color);
     }
-    for (int i = 0; i < lcd_config.lcd_vertical_res; i++)
-    {
+    for (int i = 0; i < lcd_config.lcd_vertical_res; i++) {
         esp_lcd_panel_draw_bitmap(lcd_pandel, 0, i, lcd_config.lcd_height_res + 1, i + 1, buffer);
     }
 

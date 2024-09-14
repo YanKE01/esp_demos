@@ -24,26 +24,22 @@ static esp_vfs_fat_mount_config_t mount_config = {
 void usb_host_handle_events(void *args)
 {
     uint32_t end_flags = 0;
-    while (1)
-    {
+    while (1) {
         uint32_t event_flags = 0;
         usb_host_lib_handle_events(portMAX_DELAY, &event_flags); // 等待事件
-        if (event_flags & USB_HOST_LIB_EVENT_FLAGS_NO_CLIENTS)
-        {
+        if (event_flags & USB_HOST_LIB_EVENT_FLAGS_NO_CLIENTS) {
             // 所有客户端均被注销
             ESP_LOGI(TAG, "USB_HOST_LIB_EVENT_FLAGS_NO_CLIENTS");
             usb_host_device_free_all();
             end_flags |= 1;
         }
 
-        if (event_flags & USB_HOST_LIB_EVENT_FLAGS_ALL_FREE)
-        {
+        if (event_flags & USB_HOST_LIB_EVENT_FLAGS_ALL_FREE) {
             ESP_LOGI(TAG, "USB_HOST_LIB_EVENT_FLAGS_ALL_FREE");
             end_flags |= 2;
         }
 
-        if (end_flags == 3)
-        {
+        if (end_flags == 3) {
             xSemaphoreGive(ready_to_deinit_usb);
             break;
         }
@@ -73,12 +69,9 @@ void usb_host_init()
 
 void usb_host_msc_event_cb(const msc_host_event_t *event, void *arg)
 {
-    if (event->event == MSC_DEVICE_CONNECTED)
-    {
+    if (event->event == MSC_DEVICE_CONNECTED) {
         ESP_LOGI(TAG, "MSC Device Connected"); // 设备连接
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "MSC Device Disconnected"); // 设备无连接
     }
 
@@ -116,13 +109,11 @@ void usb_host_msc_init()
 
 void msc_task(void *args)
 {
-    while (1)
-    {
+    while (1) {
         // 等待设备连接
         msc_host_event_t msc_event;
         xQueueReceive(app_queue, &msc_event, portMAX_DELAY);
-        if (msc_event.event == MSC_DEVICE_CONNECTED)
-        {
+        if (msc_event.event == MSC_DEVICE_CONNECTED) {
             // 获取MSC设备地址
             uint8_t device_addr = msc_event.device.address;
             // 初始化MSC设备
@@ -133,21 +124,15 @@ void msc_task(void *args)
 
             // 扫描所有文件
             DIR *dir = opendir("/usb");
-            if (dir != NULL)
-            {
+            if (dir != NULL) {
                 struct dirent *entry;
-                while ((entry = readdir(dir)) != NULL)
-                {
+                while ((entry = readdir(dir)) != NULL) {
                     ESP_LOGI(TAG, "%s has file:%s", "/usb", entry->d_name);
                 }
-            }
-            else
-            {
+            } else {
                 break;
             }
-        }
-        else
-        {
+        } else {
             ESP_ERROR_CHECK(msc_host_vfs_unregister(vfs_handle));
             ESP_ERROR_CHECK(msc_host_uninstall_device(device));
         }

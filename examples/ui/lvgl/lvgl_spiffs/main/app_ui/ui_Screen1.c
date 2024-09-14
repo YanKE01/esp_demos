@@ -7,6 +7,6 @@
 
 void ui_Screen1_screen_init(void)
 {
-ui_Screen1 = lv_obj_create(NULL);
-lv_obj_clear_flag( ui_Screen1, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+    ui_Screen1 = lv_obj_create(NULL);
+    lv_obj_clear_flag( ui_Screen1, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 }

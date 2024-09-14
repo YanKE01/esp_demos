@@ -40,9 +40,9 @@ void _ui_roller_set_property( lv_obj_t *target, int id, int val);
 #define _UI_SLIDER_PROPERTY_VALUE_WITH_ANIM 1
 void _ui_slider_set_property( lv_obj_t *target, int id, int val);
 
-void _ui_screen_change( lv_obj_t ** target, lv_scr_load_anim_t fademode, int spd, int delay, void (*target_init)(void));
+void _ui_screen_change( lv_obj_t **target, lv_scr_load_anim_t fademode, int spd, int delay, void (*target_init)(void));
 
-void _ui_screen_delete( lv_obj_t ** target );
+void _ui_screen_delete( lv_obj_t **target );
 
 void _ui_arc_increment( lv_obj_t *target, int val);
 
@@ -62,7 +62,7 @@ void _ui_flag_modify( lv_obj_t *target, int32_t flag, int value);
 #define _UI_MODIFY_STATE_TOGGLE 2
 void _ui_state_modify( lv_obj_t *target, int32_t state, int value);
 
-void scr_unloaded_delete_cb(lv_event_t * e);
+void scr_unloaded_delete_cb(lv_event_t *e);
 
 void _ui_opacity_set( lv_obj_t *target, int val);
 
@@ -75,37 +75,37 @@ typedef struct _ui_anim_user_data_t {
 } ui_anim_user_data_t;
 void _ui_anim_callback_free_user_data(lv_anim_t *a);
 
-void _ui_anim_callback_set_x(lv_anim_t* a, int32_t v);
+void _ui_anim_callback_set_x(lv_anim_t *a, int32_t v);
 
-void _ui_anim_callback_set_y(lv_anim_t* a, int32_t v);
+void _ui_anim_callback_set_y(lv_anim_t *a, int32_t v);
 
-void _ui_anim_callback_set_width(lv_anim_t* a, int32_t v);
+void _ui_anim_callback_set_width(lv_anim_t *a, int32_t v);
 
-void _ui_anim_callback_set_height(lv_anim_t* a, int32_t v);
+void _ui_anim_callback_set_height(lv_anim_t *a, int32_t v);
 
-void _ui_anim_callback_set_opacity(lv_anim_t* a, int32_t v);
+void _ui_anim_callback_set_opacity(lv_anim_t *a, int32_t v);
 
-void _ui_anim_callback_set_image_zoom(lv_anim_t* a, int32_t v);
+void _ui_anim_callback_set_image_zoom(lv_anim_t *a, int32_t v);
 
-void _ui_anim_callback_set_image_angle(lv_anim_t* a, int32_t v);
+void _ui_anim_callback_set_image_angle(lv_anim_t *a, int32_t v);
 
-void _ui_anim_callback_set_image_frame(lv_anim_t* a, int32_t v);
+void _ui_anim_callback_set_image_frame(lv_anim_t *a, int32_t v);
 
-int32_t _ui_anim_callback_get_x(lv_anim_t* a);
+int32_t _ui_anim_callback_get_x(lv_anim_t *a);
 
-int32_t _ui_anim_callback_get_y(lv_anim_t* a);
+int32_t _ui_anim_callback_get_y(lv_anim_t *a);
 
-int32_t _ui_anim_callback_get_width(lv_anim_t* a);
+int32_t _ui_anim_callback_get_width(lv_anim_t *a);
 
-int32_t _ui_anim_callback_get_height(lv_anim_t* a);
+int32_t _ui_anim_callback_get_height(lv_anim_t *a);
 
-int32_t _ui_anim_callback_get_opacity(lv_anim_t* a);
+int32_t _ui_anim_callback_get_opacity(lv_anim_t *a);
 
-int32_t _ui_anim_callback_get_image_zoom(lv_anim_t* a);
+int32_t _ui_anim_callback_get_image_zoom(lv_anim_t *a);
 
-int32_t _ui_anim_callback_get_image_angle(lv_anim_t* a);
+int32_t _ui_anim_callback_get_image_angle(lv_anim_t *a);
 
-int32_t _ui_anim_callback_get_image_frame(lv_anim_t* a);
+int32_t _ui_anim_callback_get_image_frame(lv_anim_t *a);
 
 void _ui_arc_set_text_value( lv_obj_t *trg, lv_obj_t *src, const char *prefix, const char *postfix);
 
@@ -113,7 +113,8 @@ void _ui_slider_set_text_value( lv_obj_t *trg, lv_obj_t *src, const char *prefix
 
 void _ui_checked_set_text_value( lv_obj_t *trg, lv_obj_t *src, const char *txt_on, const char *txt_off);
 
-void _ui_spinbox_step(lv_obj_t * target, int val);
+void _ui_spinbox_step(lv_obj_t *target, int val)
+;
 
 #ifdef __cplusplus
 } /*extern "C"*/

@@ -11,8 +11,7 @@ static char *formate = "tex=%s&tok=%s&cuid=mpBNOBqqTHmz93GbNEZDm5vUnwV0Lnm1&ctp=
 
 esp_err_t app_http_baidu_tts_event_handler(esp_http_client_event_t *evt)
 {
-    if (evt->event_id == HTTP_EVENT_ON_DATA)
-    {
+    if (evt->event_id == HTTP_EVENT_ON_DATA) {
         ESP_LOGI(TAG, "Received length:%d", evt->data_len);
         //  i2s pcm
         i2s_channel_write(tx_handle, (char *)evt->data, evt->data_len, NULL, 50);
@@ -30,8 +29,7 @@ esp_err_t app_http_baidu_tts_set_text(char *text)
     url_encode((unsigned char *)text, strlen(text), &text_url_encode_size, NULL, 0);
     ESP_LOGI(TAG, "text size after url encode:%zu", text_url_encode_size);
     char *text_url_encode = heap_caps_malloc(text_url_encode_size + 1, MALLOC_CAP_DMA);
-    if (text_url_encode == NULL)
-    {
+    if (text_url_encode == NULL) {
         ESP_LOGI(TAG, "Malloc text url encode failed");
         return ESP_FAIL;
     }
@@ -51,8 +49,7 @@ esp_err_t app_http_baidu_tts_set_text(char *text)
     esp_http_client_set_header(tts_client, "Accept", "*/*");
     char *payload = heap_caps_malloc(strlen(formate) + strlen(access_token) + strlen(text_url_encode) + 1, MALLOC_CAP_DMA);
 
-    if (payload == NULL)
-    {
+    if (payload == NULL) {
         free(text_url_encode);
         ESP_LOGI(TAG, "Malloc payload failed");
         return ESP_FAIL;
@@ -62,12 +59,9 @@ esp_err_t app_http_baidu_tts_set_text(char *text)
     esp_http_client_set_post_field(tts_client, payload, strlen(payload));
 
     err = esp_http_client_perform(tts_client);
-    if (err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %d", esp_http_client_get_status_code(tts_client), (int)esp_http_client_get_content_length(tts_client));
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
     }
     esp_http_client_cleanup(tts_client);

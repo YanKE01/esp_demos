@@ -34,10 +34,8 @@ void app_main(void)
     ESP_ERROR_CHECK(hal_i2s_microphone_init(i2s_microphone_config));
     ESP_ERROR_CHECK(hal_i2s_speaker_init(i2s_speaker_config));
 
-    while (1)
-    {
-        if (i2s_channel_read(rx_handle, (char *)i2s_readraw_buff, I2S_DATA_BIT_WIDTH_16BIT * 1024, &bytes_read, 100) == ESP_OK)
-        {
+    while (1) {
+        if (i2s_channel_read(rx_handle, (char *)i2s_readraw_buff, I2S_DATA_BIT_WIDTH_16BIT * 1024, &bytes_read, 100) == ESP_OK) {
             i2s_channel_write(tx_handle, i2s_readraw_buff, bytes_read, &bytes_write, 100);
             printf("%zu\n", bytes_read);
         }

@@ -73,8 +73,7 @@ esp_err_t aduio_app_write(void *audio_buffer, size_t len, size_t *bytes_written,
 {
     esp_err_t ret = ESP_OK;
 
-    if (aduio_write(audio_buffer, len, bytes_written, 1000) != ESP_OK)
-    {
+    if (aduio_write(audio_buffer, len, bytes_written, 1000) != ESP_OK) {
         ret = ESP_FAIL;
     }
 
@@ -103,8 +102,7 @@ esp_err_t audio_app_player_music(char *file_path)
 
 static void audio_app_callback(audio_player_cb_ctx_t *ctx)
 {
-    switch (ctx->audio_event)
-    {
+    switch (ctx->audio_event) {
     case 0: /**< Player is idle, not playing audio */
         ESP_LOGI(TAG, "IDLE");
         break;
@@ -132,14 +130,12 @@ static void audio_app_callback(audio_player_cb_ctx_t *ctx)
 esp_err_t audio_app_player_init(i2s_port_t i2s_port, hal_i2s_pin_t pin_cfg, uint16_t sample_rate)
 {
     i2s_data_if = hal_i2s_init(i2s_port, pin_cfg, &i2s_tx_chan, sample_rate);
-    if (i2s_data_if == NULL)
-    {
+    if (i2s_data_if == NULL) {
         return ESP_FAIL;
     }
 
     play_dev_handle = audio_codec_init(i2s_data_if);
-    if (play_dev_handle == NULL)
-    {
+    if (play_dev_handle == NULL) {
         return ESP_FAIL;
     }
 

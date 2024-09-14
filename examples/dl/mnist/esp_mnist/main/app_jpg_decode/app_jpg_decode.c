@@ -13,23 +13,20 @@ static const char *TAG = "JPG Decode";
 uint8_t *app_jpg_decode(char *path)
 {
     struct stat st;
-    if (stat(path, &st) == 0)
-    {
+    if (stat(path, &st) == 0) {
         ESP_LOGI(TAG, "File %s size is %ld\n", path, st.st_size);
 
         uint32_t filesize = (uint32_t)st.st_size; // read pic size
         float *file_buf = (float *)heap_caps_malloc(filesize + 1, MALLOC_CAP_SPIRAM);
 
-        if (file_buf == NULL)
-        {
+        if (file_buf == NULL) {
             ESP_LOGI(TAG, "Malloc file buffer fail");
             return NULL;
         }
 
         int f = open(path, O_RDONLY);
 
-        if (f > 0)
-        {
+        if (f > 0) {
             read(f, file_buf, filesize);
             size_t pic_buf_size = 28 * 28 * sizeof(uint16_t);
             uint8_t *pic_buf = (uint8_t *)heap_caps_malloc(pic_buf_size + 1, MALLOC_CAP_SPIRAM); // create out image buffer
@@ -52,9 +49,7 @@ uint8_t *app_jpg_decode(char *path)
         }
 
         free(file_buf);
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "Read Size Fail");
     }
 
@@ -63,8 +58,7 @@ uint8_t *app_jpg_decode(char *path)
 
 void app_rgb565_to_gray(uint8_t *pic_buf, uint8_t *gray_buf, int width, int height)
 {
-    for (int i = 0; i < width * height; i++)
-    {
+    for (int i = 0; i < width * height; i++) {
         uint16_t pixel = ((uint16_t)pic_buf[2 * i + 1] << 8) | pic_buf[2 * i];
 
         // 提取RGB分量

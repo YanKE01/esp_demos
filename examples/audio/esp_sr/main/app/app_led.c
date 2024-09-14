@@ -26,8 +26,7 @@ void app_led_on()
     app_led_config.r = 50;
     app_led_config.g = 40;
     app_led_config.b = 0;
-    for (int i = 0; i < app_led_config.led_max_num; i++)
-    {
+    for (int i = 0; i < app_led_config.led_max_num; i++) {
         led_strip_set_pixel(led_strip, i, app_led_config.r, app_led_config.g, app_led_config.b);
     }
 }
@@ -37,8 +36,7 @@ void app_led_off()
     app_led_config.r = 0;
     app_led_config.g = 0;
     app_led_config.b = 0;
-    for (int i = 0; i < app_led_config.led_max_num; i++)
-    {
+    for (int i = 0; i < app_led_config.led_max_num; i++) {
         led_strip_set_pixel(led_strip, i, app_led_config.r, app_led_config.g, app_led_config.b);
     }
 }
@@ -48,8 +46,7 @@ void app_led_rand()
     app_led_config.r = rand() % 255;
     app_led_config.g = rand() % 255;
     app_led_config.b = rand() % 255;
-    for (int i = 0; i < app_led_config.led_max_num; i++)
-    {
+    for (int i = 0; i < app_led_config.led_max_num; i++) {
         led_strip_set_pixel(led_strip, i, app_led_config.r, app_led_config.g, app_led_config.b);
     }
     app_led_config.command = 6;
@@ -57,8 +54,7 @@ void app_led_rand()
 
 void app_led_hold()
 {
-    for (int i = 0; i < app_led_config.led_max_num; i++)
-    {
+    for (int i = 0; i < app_led_config.led_max_num; i++) {
         led_strip_set_pixel(led_strip, i, app_led_config.r, app_led_config.g, app_led_config.b);
     }
 }
@@ -68,8 +64,7 @@ void app_led_up_brightness()
     app_led_config.r = (app_led_config.r + 10) % 255;
     app_led_config.g = (app_led_config.g + 10) % 255;
     app_led_config.b = (app_led_config.b + 10) % 255;
-    for (int i = 0; i < app_led_config.led_max_num; i++)
-    {
+    for (int i = 0; i < app_led_config.led_max_num; i++) {
         led_strip_set_pixel(led_strip, i, app_led_config.r, app_led_config.g, app_led_config.b);
     }
     app_led_config.command = 8;
@@ -80,8 +75,7 @@ void app_led_down_brightness()
     app_led_config.r = (app_led_config.r >= 10) ? (app_led_config.r - 10) : 0;
     app_led_config.g = (app_led_config.g >= 10) ? (app_led_config.g - 10) : 0;
     app_led_config.b = (app_led_config.b >= 10) ? (app_led_config.b - 10) : 0;
-    for (int i = 0; i < app_led_config.led_max_num; i++)
-    {
+    for (int i = 0; i < app_led_config.led_max_num; i++) {
         led_strip_set_pixel(led_strip, i, app_led_config.r, app_led_config.g, app_led_config.b);
     }
     app_led_config.command = 8;
@@ -89,14 +83,10 @@ void app_led_down_brightness()
 
 void app_led_clac()
 {
-    for (int i = 0; i < app_led_config.led_max_num; i++)
-    {
-        if (i < 2)
-        {
+    for (int i = 0; i < app_led_config.led_max_num; i++) {
+        if (i < 2) {
             led_strip_set_pixel(led_strip, i, app_led_config.r, app_led_config.g, app_led_config.b);
-        }
-        else
-        {
+        } else {
             led_strip_set_pixel(led_strip, i, 0, 0, 0);
         }
     }
@@ -106,23 +96,17 @@ void app_led_good_morning()
 {
     static int count = 0;
     count++;
-    if (count % 5 == 0)
-    {
-        for (int i = 0; i < app_led_config.led_max_num; i++)
-        {
+    if (count % 5 == 0) {
+        for (int i = 0; i < app_led_config.led_max_num; i++) {
             led_strip_set_pixel(led_strip, i, 0, 0, 0);
         }
-    }
-    else
-    {
-        for (int i = 0; i < app_led_config.led_max_num; i++)
-        {
+    } else {
+        for (int i = 0; i < app_led_config.led_max_num; i++) {
             led_strip_set_pixel(led_strip, i, app_led_config.r, app_led_config.g, app_led_config.b);
         }
     }
 
-    if (count == 20)
-    {
+    if (count == 20) {
         count = 0;
         app_led_config.command = 8;
     }
@@ -142,8 +126,7 @@ void (*app_led_function[])() = {
 
 void app_led_task(void *pvParameters)
 {
-    while (1)
-    {
+    while (1) {
         (*app_led_function[app_led_config.command])();
         led_strip_refresh(led_strip);
         vTaskDelay(50 / portTICK_PERIOD_MS);

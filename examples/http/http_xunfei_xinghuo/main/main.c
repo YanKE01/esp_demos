@@ -17,8 +17,7 @@ static const char *TAG = "XF";
 
 esp_err_t app_http_xf_event_handler(esp_http_client_event_t *evt)
 {
-    if (evt->event_id == HTTP_EVENT_ON_DATA)
-    {
+    if (evt->event_id == HTTP_EVENT_ON_DATA) {
         ESP_LOGI(TAG, "%.*s", evt->data_len, (char *)evt->data);
     }
 
@@ -29,8 +28,7 @@ void app_main(void)
 {
     // Init NVS
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-    {
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
@@ -56,12 +54,9 @@ void app_main(void)
     esp_http_client_set_post_field(client, xf_message, strlen(xf_message));
 
     esp_err_t err = esp_http_client_perform(client);
-    if (err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %d", esp_http_client_get_status_code(client), (int)esp_http_client_get_content_length(client));
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
     }
     esp_http_client_cleanup(client);

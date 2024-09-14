@@ -56,7 +56,8 @@ esp_err_t lvgl_init()
         },
         .flags = {
             .buff_dma = true,
-        }};
+        }
+    };
 
     lvgl_disp = lvgl_port_add_disp(&disp_cfg);
     return ESP_OK;

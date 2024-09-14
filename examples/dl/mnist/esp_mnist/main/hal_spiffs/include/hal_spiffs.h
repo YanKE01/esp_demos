@@ -6,13 +6,13 @@
 extern "C"
 {
 #endif
-    /**
-     * @brief spiffs init
-     *
-     * @param path mount path
-     * @return esp_err_t
-     */
-    esp_err_t hal_spiffs_init(char *path);
+/**
+ * @brief spiffs init
+ *
+ * @param path mount path
+ * @return esp_err_t
+ */
+esp_err_t hal_spiffs_init(char *path);
 
 #ifdef __cplusplus
 }

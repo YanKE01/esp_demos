@@ -18,19 +18,16 @@ esp_http_client_handle_t client;
 
 esp_err_t app_http_baidu_access_token_event_handler(esp_http_client_event_t *evt)
 {
-    if (evt->event_id == HTTP_EVENT_ON_DATA)
-    {
+    if (evt->event_id == HTTP_EVENT_ON_DATA) {
         // ESP_LOGI(TAG, "%.*s", evt->data_len, (char *)evt->data);
         jparse_ctx_t jctx;
         int ret = json_parse_start(&jctx, (char *)evt->data, evt->data_len);
-        if (ret != OS_SUCCESS)
-        {
+        if (ret != OS_SUCCESS) {
             ESP_LOGI(TAG, "Parser failed\n");
             return ESP_FAIL;
         }
 
-        if (json_obj_get_string(&jctx, "access_token", access_token, sizeof(access_token)) == OS_SUCCESS)
-        {
+        if (json_obj_get_string(&jctx, "access_token", access_token, sizeof(access_token)) == OS_SUCCESS) {
             ESP_LOGI(TAG, "access_token: %s\n", access_token);
         }
 
@@ -44,8 +41,7 @@ void app_main(void)
 {
     // Init NVS
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-    {
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
@@ -70,12 +66,9 @@ void app_main(void)
     esp_http_client_set_header(client, "Content-Type", "application/json");
     esp_http_client_set_header(client, "Accept", "application/json");
     esp_err_t err = esp_http_client_perform(client);
-    if (err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %d", esp_http_client_get_status_code(client), (int)esp_http_client_get_content_length(client));
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
     }
     esp_http_client_cleanup(client);

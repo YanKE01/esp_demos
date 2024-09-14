@@ -67,7 +67,8 @@ esp_err_t lvgl_init()
         },
         .flags = {
             .buff_dma = true,
-        }};
+        }
+    };
 
     lvgl_disp = lvgl_port_add_disp(&disp_cfg);
     return ESP_OK;
@@ -75,15 +76,11 @@ esp_err_t lvgl_init()
 
 void camera_show_task(void *args)
 {
-    while (1)
-    {
+    while (1) {
         camera_fb_t *pic = esp_camera_fb_get();
-        if (pic == NULL)
-        {
+        if (pic == NULL) {
             vTaskDelay(100 / portTICK_PERIOD_MS);
-        }
-        else
-        {
+        } else {
             img_dsc.data = pic->buf;
             lv_img_set_src(ui_Image1, &img_dsc);
             esp_camera_fb_return(pic);

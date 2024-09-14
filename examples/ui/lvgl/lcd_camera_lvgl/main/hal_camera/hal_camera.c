@@ -34,8 +34,7 @@ static camera_config_t camera_config = {
 esp_err_t hal_camera_init()
 {
     esp_err_t err = esp_camera_init(&camera_config);
-    if (err != ESP_OK)
-    {
+    if (err != ESP_OK) {
         ESP_LOGE(TAG, "Camera Init Failed");
         return err;
     }

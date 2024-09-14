@@ -17,22 +17,18 @@ char *wav_raw_buffer = NULL;
 
 esp_err_t app_http_baidu_speech_recognition_event_handler(esp_http_client_event_t *evt)
 {
-    if (evt->event_id == HTTP_EVENT_ON_DATA)
-    {
+    if (evt->event_id == HTTP_EVENT_ON_DATA) {
         ESP_LOGI(TAG, "%.*s", evt->data_len, (char *)evt->data);
         jparse_ctx_t jctx;
         int num_elem;
         int ret = json_parse_start(&jctx, (char *)evt->data, evt->data_len);
-        if (ret != OS_SUCCESS)
-        {
+        if (ret != OS_SUCCESS) {
             ESP_LOGI(TAG, "Parser failed\n");
             return ESP_FAIL;
         }
 
-        if (json_obj_get_array(&jctx, "result", &num_elem) == OS_SUCCESS)
-        {
-            for (int i = 0; i < num_elem; i++)
-            {
+        if (json_obj_get_array(&jctx, "result", &num_elem) == OS_SUCCESS) {
+            for (int i = 0; i < num_elem; i++) {
                 json_arr_get_string(&jctx, i, asr_result, sizeof(asr_result));
                 ESP_LOGI(TAG, "asr result: %s\n", asr_result);
             }
@@ -40,11 +36,8 @@ esp_err_t app_http_baidu_speech_recognition_event_handler(esp_http_client_event_
         }
 
         json_parse_end(&jctx);
-    }
-    else if (evt->event_id == HTTP_EVENT_ON_FINISH)
-    {
-        if (xTongyiQuestion != NULL)
-        {
+    } else if (evt->event_id == HTTP_EVENT_ON_FINISH) {
+        if (xTongyiQuestion != NULL) {
             xQueueSend(xTongyiQuestion, asr_result, 100);
             memset(asr_result, 0, sizeof(asr_result));
         }
@@ -57,8 +50,7 @@ void app_http_asr(int time)
 {
     hal_i2s_record("/spiffs/record.wav", time);
     wav_file = fopen("/spiffs/record.wav", "r");
-    if (wav_file == NULL)
-    {
+    if (wav_file == NULL) {
         ESP_LOGI(TAG, "Read audio file failed");
     }
     fseek(wav_file, 0, SEEK_END);
@@ -66,8 +58,7 @@ void app_http_asr(int time)
     fseek(wav_file, 0, SEEK_SET);
     ESP_LOGI(TAG, "WAV File size:%zu", wav_file_size);
     wav_raw_buffer = heap_caps_malloc(wav_file_size + 1, MALLOC_CAP_SPIRAM);
-    if (wav_raw_buffer == NULL)
-    {
+    if (wav_raw_buffer == NULL) {
         ESP_LOGI(TAG, "Malloc wav raw buffer fail");
         return;
     }
@@ -90,12 +81,9 @@ void app_http_asr(int time)
     esp_http_client_set_post_field(asr_client, wav_raw_buffer, wav_file_size);
 
     esp_err_t err = esp_http_client_perform(asr_client);
-    if (err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %d", esp_http_client_get_status_code(asr_client), (int)esp_http_client_get_content_length(asr_client));
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
     }
     esp_http_client_cleanup(asr_client);

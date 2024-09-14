@@ -55,8 +55,7 @@ list_page_t setting_bright_win_page = {
 
 void main_menu_cb()
 {
-    if (list_page[list_page_index].select == 1)
-    {
+    if (list_page[list_page_index].select == 1) {
         // 选中setting
         ESP_LOGI(TAG, "Setting");
         jump_page(1); // 跳转到Siettng
@@ -65,14 +64,11 @@ void main_menu_cb()
 
 void setting_menu_cb()
 {
-    if (list_page[list_page_index].select == 0)
-    {
+    if (list_page[list_page_index].select == 0) {
         // 选中顶部
         ESP_LOGI(TAG, "Back");
         jump_page(0); // 跳转到main
-    }
-    else if (list_page[list_page_index].select == 1)
-    {
+    } else if (list_page[list_page_index].select == 1) {
         // 设置窗口页面
         jump_page(2);
     }
@@ -83,8 +79,7 @@ void setting_menu_cb()
 
 void ui_task(void *args)
 {
-    while (1)
-    {
+    while (1) {
         ui_proc();
         vTaskDelay(5 / portTICK_PERIOD_MS);
     }
