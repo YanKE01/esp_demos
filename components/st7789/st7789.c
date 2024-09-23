@@ -75,14 +75,12 @@ err:
 
 void lcd_fullclean(esp_lcd_panel_handle_t lcd_pandel, lcd_config_t lcd_config, uint16_t color)
 {
-    uint16_t *buffer = heap_caps_malloc(lcd_config.lcd_height_res * sizeof(uint16_t), MALLOC_CAP_INTERNAL);
-
-    for (int i = 0; i < lcd_config.lcd_height_res; i++) {
-        buffer[i] = swap_hex(color);
+    uint16_t *buffer = heap_caps_malloc(lcd_config.lcd_height_res * lcd_config.lcd_vertical_res * sizeof(uint16_t), MALLOC_CAP_INTERNAL);
+    if (buffer == NULL) {
+        // 处理内存分配失败的情况
+        return;
     }
-    for (int i = 0; i < lcd_config.lcd_vertical_res; i++) {
-        esp_lcd_panel_draw_bitmap(lcd_pandel, 0, i, lcd_config.lcd_height_res + 1, i + 1, buffer);
-    }
-
+    memset(buffer, swap_hex(color), lcd_config.lcd_height_res * lcd_config.lcd_vertical_res * sizeof(uint16_t));
+    esp_lcd_panel_draw_bitmap(lcd_panel, 0, 0, lcd_config.lcd_height_res, lcd_config.lcd_vertical_res, buffer);
     heap_caps_free(buffer);
 }
