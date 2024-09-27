@@ -1,0 +1,3 @@
+[submodule "examples/ui/box2d/components/box2d"]
+	path = examples/ui/box2d/components/box2d
+	url = https://github.com/piolib/box2d
