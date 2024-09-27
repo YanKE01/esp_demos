@@ -19,20 +19,20 @@ void app_main(void)
 
     rmt_encoder_handle_t bytes_encoder = NULL;
 
-    // 对bit 0和1 进行编码
+    // Encode bit 0 and 1
     rmt_bytes_encoder_config_t bytes_enc_config = {
         .bit0 = {
             .level0 = 1,
             .duration0 = 1, // 1us
             .level1 = 0,
             .duration1 = 1, // 1us
-        }, // 对于 0 而言，先高电平持续1us，在低电平持续1us
+        }, // For bit 0: first high level for 1us, then low level for 1us
         .bit1 = {
             .level0 = 1,
             .duration0 = 9, // 9us
             .level1 = 0,
             .duration1 = 3, // 3us
-        }, // 对于 1 而言，先高电平持续 9us，在低电平持续3us
+        }, // For bit 1: first high level for 9us, then low level for 3us
     };
 
     rmt_new_bytes_encoder(&bytes_enc_config, &bytes_encoder);
@@ -45,7 +45,7 @@ void app_main(void)
     while (1) {
         rmt_transmit(tx_channel, bytes_encoder, (uint8_t[]) {
             0x05
-        }, 1, &transmit_config); // 对于0x05，其实是8bit的数据，对应 0000 0101
+        }, 1, &transmit_config); // For 0x05, it's actually 8-bit data, corresponding to 0000 0101
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
 }
