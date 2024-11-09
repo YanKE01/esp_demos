@@ -44,6 +44,18 @@ void dl_lib_free(void *d)
 
 void my_memcpy_pie_simple(void *dest, void *src, size_t n);
 
+void my_memcpy(void *dest, const void *src, size_t n)
+{
+    // Convert void pointers to char pointers for byte-by-byte copying
+    char *d = (char *)dest;
+    const char *s = (const char *)src;
+
+    // Copy n bytes from src to dest
+    for (size_t i = 0; i < n; i++) {
+        d[i] = s[i];
+    }
+}
+
 void app_main(void)
 {
     uint64_t start;
@@ -63,7 +75,7 @@ void app_main(void)
 
     start = esp_cpu_get_cycle_count();
     for (int i = 0; i < iter; i++) {
-        my_memcpy_pie_simple(store, load, ilength * sizeof(uint16_t));
+        my_memcpy(store, load, ilength * sizeof(uint16_t)); //1315
     }
     end = esp_cpu_get_cycle_count();
 

@@ -18,14 +18,20 @@ pie_loop_start:
     ee.vld.128.ip q2, a3, 16
     ee.vld.128.ip q3, a3, 16
     ee.vld.128.ip q4, a3, 16
+    ee.vld.128.ip q5, a3, 16
+    ee.vld.128.ip q6, a3, 16
+    ee.vld.128.ip q7, a3, 16
 
     ee.vst.128.ip q0, a2, 16
     ee.vst.128.ip q1, a2, 16
     ee.vst.128.ip q2, a2, 16
     ee.vst.128.ip q3, a2, 16
     ee.vst.128.ip q4, a2, 16
+    ee.vst.128.ip q5, a2, 16
+    ee.vst.128.ip q6, a2, 16
+    ee.vst.128.ip q7, a2, 16
 
-    addi a9, a9, 80
+    addi a9, a9, 128
     bge a9, a4, pie_loop_end
     j pie_loop_start
 

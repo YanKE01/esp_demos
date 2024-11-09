@@ -52,6 +52,34 @@ void add(int16_t *x, int16_t *y, int16_t *z, int n);
 void add_pie(int16_t *x, int16_t *y, int16_t *z, int n);
 
 
+void add_pie3(int16_t *x, int16_t *y, int16_t *z, int n)
+{
+    // 4*
+    int32_t loop_num = (n / 32) + 1;
+    asm volatile("loopnez %0, loop_end" ::"a"(loop_num));
+    asm volatile("ee.vld.128.ip q0, %0, 16" ::"a"(x));
+    asm volatile("ee.vld.128.ip q1, %0, 16" ::"a"(x));
+    asm volatile("ee.vld.128.ip q2, %0, 16" ::"a"(x));
+    asm volatile("ee.vld.128.ip q3, %0, 16" ::"a"(x));
+
+    asm volatile("ee.vld.128.ip q4, %0, 16" ::"a"(y));
+    asm volatile("ee.vld.128.ip q5, %0, 16" ::"a"(y));
+    asm volatile("ee.vld.128.ip q6, %0, 16" ::"a"(y));
+    asm volatile("ee.vld.128.ip q7, %0, 16" ::"a"(y));
+
+    asm volatile("ee.vadds.s16 q0, q0, q4");
+    asm volatile("ee.vadds.s16 q1, q1, q5");
+    asm volatile("ee.vadds.s16 q2, q2, q6");
+    asm volatile("ee.vadds.s16 q3, q3, q7");
+
+    asm volatile("ee.vst.128.ip q0, %0, 16" ::"a"(z));
+    asm volatile("ee.vst.128.ip q1, %0, 16" ::"a"(z));
+    asm volatile("ee.vst.128.ip q2, %0, 16" ::"a"(z));
+    asm volatile("ee.vst.128.ip q3, %0, 16" ::"a"(z));
+
+    asm volatile("loop_end:");
+}
+
 void app_main(void)
 {
     uint64_t start;
@@ -73,7 +101,7 @@ void app_main(void)
     // start
     start = esp_cpu_get_cycle_count();
     for (int i = 0; i < iter; i++) {
-        add_pie(x, y, z, ilength);
+        add_ansi(x, y, z, ilength);
     }
     end = esp_cpu_get_cycle_count();
     printf("ave Cycles: %lld\n", (end - start) / iter);
