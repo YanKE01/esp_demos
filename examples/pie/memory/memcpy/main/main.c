@@ -42,7 +42,7 @@ void dl_lib_free(void *d)
     free(((void **)d)[-1]);
 }
 
-void my_memcpy_pie_simple(void *dest, void *src, size_t n);
+void memcpy_pie(void *dest, void *src, size_t n);
 
 void my_memcpy(void *dest, const void *src, size_t n)
 {

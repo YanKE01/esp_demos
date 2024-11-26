@@ -1,2 +1,2 @@
-idf_component_register(SRCS "main.c" "add.s" "add_pie.s"
+idf_component_register(SRCS "main.c"
                     INCLUDE_DIRS ".")
