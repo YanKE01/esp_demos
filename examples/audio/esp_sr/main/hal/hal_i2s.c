@@ -39,7 +39,7 @@ esp_err_t hal_i2s_get_data(int16_t *buffer, int buffer_len)
     int audio_chunksize = buffer_len / sizeof(int32_t);
     ret = i2s_channel_read(rx_handle, buffer, buffer_len, &bytes_read, portMAX_DELAY);
 
-    int32_t *tmp_buff = buffer;
+    int32_t *tmp_buff = (int32_t *)buffer;
     for (int i = 0; i < audio_chunksize; i++) {
         tmp_buff[i] = tmp_buff[i] >> 14; // 32:8为有效位， 8:0为低8位， 全为0， AFE的输入为16位语音数据，拿29：13位是为了对语音信号放大。
     }
