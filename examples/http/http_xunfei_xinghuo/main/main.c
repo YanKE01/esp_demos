@@ -7,8 +7,8 @@
 #include "esp_heap_caps.h"
 
 char *xf_url = "https://spark-api-open.xf-yun.com/v1/chat/completions";
-char *xf_key = "ae575555091f46e1d2b91ef293f1b78f";
-char *xf_secret = "NTZiN2U5ZGNkMjdlNWU1NTRmMGE0OGRj";
+char *xf_key = "";
+char *xf_secret = "";
 char *xf_authorization_formate = "Bearer %s:%s";
 char *xf_message = "{\"model\": \"generalv3.5\", \"messages\": [{\"role\": \"user\", \"content\": \"你是谁\"}]}";
 

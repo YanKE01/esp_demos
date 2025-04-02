@@ -10,7 +10,7 @@ esp_http_client_handle_t tongyi_client;
 QueueHandle_t xTongyiQuestion;
 static const char *TAG = "TONGYI";
 char *tongyi_url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation";
-char *key = "sk-1221ac76f44b4936ada7d92836404038";
+char *key = "";
 char *format = "{\"model\": \"qwen-turbo\",\"input\": {\"messages\": [{\"role\": \"system\",\"content\": \"You are a helpful assistant.\"},{\"role\": \"user\",\"content\": \"%s\"}]},\"parameters\": {\"result_format\": \"message\"}}";
 char tongyi_result[1024];
 

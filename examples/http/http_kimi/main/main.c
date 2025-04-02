@@ -8,7 +8,7 @@
 
 static const char *TAG = "KIMI";
 char *kimi_url = "https://api.moonshot.cn/v1/chat/completions";
-char *kimi_key = "sk-L1wBIZP4FYIaNlNDjssoqVyVD08MVLtuxYhwfzv10IqSWCNZ";
+char *kimi_key = "";
 char *kimi_authorization_formate = "Bearer %s";
 char *kimi_message = "{\"model\": \"moonshot-v1-8k\",\"messages\": [{\"role\": \"system\", \"content\": \"you are Kimi\"},{\"role\": \"user\", \"content\": \"hello,good morning\"}],\"temperature\": 0.3}";
 esp_http_client_handle_t client;

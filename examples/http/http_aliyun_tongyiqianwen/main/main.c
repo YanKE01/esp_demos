@@ -13,7 +13,7 @@ static const char *TAG = "HTTP_TONGYI";
 esp_http_client_handle_t client;
 QueueHandle_t xQueue;
 char *tongyi_url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation";
-char *key = "sk-1221ac76f44b4936ada7d92836404038";
+char *key = "";
 char *format = "{\"model\": \"qwen-turbo\",\"input\": {\"messages\": [{\"role\": \"system\",\"content\": \"You are a helpful assistant.\"},{\"role\": \"user\",\"content\": \"%s\"}]},\"parameters\": {\"result_format\": \"message\"}}";
 
 esp_err_t app_http_tongyi_event_handler(esp_http_client_event_t *evt)
