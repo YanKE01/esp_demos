@@ -1,0 +1,8 @@
+rules:
+  - path: "examples/get-started/hello_world"
+    targets: ["esp32", "esp32s3"]
+  - path: "examples/peripherals/gpio"
+    targets: ["esp32", "esp32s3", "esp32p4"]
+  - path: "examples/bluetooth/ble_adv"
+    targets: ["esp32", "esp32s3"]
+  # 添加更多项目的规则...

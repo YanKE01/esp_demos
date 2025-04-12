@@ -1,4 +1,4 @@
-name: Build with ESP-IDF v5.4
+name: Build with ESP-IDF
 
 on: [push]
 
@@ -7,16 +7,130 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        idf_ver: ["release-v5.4"]
-    container: espressif/idf:${{matrix.idf_ver}}
+        project:
+          - name: algorithm-mfcc
+            path: 'examples/algorithm/mfcc'
+            targets: ['esp32s3']
+          - name: audio-sr
+            path: 'examples/audio/esp_sr'
+            targets: ['esp32s3']
+          - name: audio-max98357a
+            path: 'examples/audio/max98357a'
+            targets: ['esp32s3']
+          - name: audio-record-play
+            path: 'examples/audio/record_play'
+            targets: ['esp32s3']
+          - name: boost-hello-world
+            path: 'examples/boost/hello_world'
+            targets: ['esp32s3']
+          - name: dl-boston-housing
+            path: 'examples/dl/boston_housing/esp_boston'
+            targets: ['esp32s3']
+          - name: dl-cifar10
+            path: 'examples/dl/cifar10/esp_cifar10'
+            targets: ['esp32s3']
+          - name: dl-mnist
+            path: 'examples/dl/mnist/esp_mnist'
+            targets: ['esp32s3']
+          - name: dl-sin-wave-predict
+            path: 'examples/dl/sin_wave_predict/esp_sin_wave_predict'
+            targets: ['esp32s3']
+          - name: http-baidu-speech
+            path: 'examples/http/http_baidu_speech_recognition'
+            targets: ['esp32s3']
+          - name: http-xunfei-xinghuo
+            path: 'examples/http/http_xunfei_xinghuo'
+            targets: ['esp32s3']
+          - name: http-baidu-tts
+            path: 'examples/http/http_baidu_tts'
+            targets: ['esp32s3']
+          - name: http-kimi
+            path: 'examples/http/http_kimi'
+            targets: ['esp32s3']
+          - name: http-esp-gpt
+            path: 'examples/http/esp_gpt'
+            targets: ['esp32s3']
+          - name: http-aliyun-tongyi
+            path: 'examples/http/http_aliyun_tongyiqianwen'
+            targets: ['esp32s3']
+          - name: http-baidu-access-token
+            path: 'examples/http/http_baidu_access_token'
+            targets: ['esp32s3']
+          - name: http-baidu-img-classification
+            path: 'examples/http/http_baidu_img_classification'
+            targets: ['esp32s3']
+          - name: peripherals-can
+            path: 'examples/peripherals/can'
+            targets: ['esp32s3']
+          - name: peripherals-i2c
+            path: 'examples/peripherals/i2c'
+            targets: ['esp32s3']
+          - name: peripherals-pcnt
+            path: 'examples/peripherals/pcnt'
+            targets: ['esp32s3']
+          - name: peripherals-rmt
+            path: 'examples/peripherals/rmt'
+            targets: ['esp32s3']
+          - name: peripherals-pwm
+            path: 'examples/peripherals/pwm'
+            targets: ['esp32s3']
+          - name: peripherals-lcd-jpg
+            path: 'examples/peripherals/lcd/lcd_jpg'
+            targets: ['esp32s3']
+          - name: peripherals-lcd-oled
+            path: 'examples/peripherals/lcd/oled'
+            targets: ['esp32s3']
+          - name: pie-math-shift
+            path: 'examples/pie/math/shift_operation'
+            targets: ['esp32s3']
+          - name: pie-math-add
+            path: 'examples/pie/math/add'
+            targets: ['esp32s3']
+          - name: pie-math-multiply-add
+            path: 'examples/pie/math/multiply_add'
+            targets: ['esp32s3']
+          - name: pie-memory-memcpy
+            path: 'examples/pie/memory/memcpy'
+            targets: ['esp32s3']
+          - name: pie-assembly-loopgtz
+            path: 'examples/pie/assembly_instruction/loopgtz'
+            targets: ['esp32s3']
+          - name: protocols-protobuf
+            path: 'examples/protocols/protobuf'
+            targets: ['esp32s3']
+          - name: protocols-protobuf-c
+            path: 'examples/protocols/protobuf_c'
+            targets: ['esp32s3']
+          - name: protocols-json
+            path: 'examples/protocols/json'
+            targets: ['esp32s3']
+          - name: protocols-modbus
+            path: 'examples/protocols/modbus'
+            targets: ['esp32s3']
+          - name: ui-lvgl-lcd-camera
+            path: 'examples/ui/lvgl/lcd_camera_lvgl'
+            targets: ['esp32s3']
+          - name: ui-lvgl-spiffs
+            path: 'examples/ui/lvgl/lvgl_spiffs'
+            targets: ['esp32s3']
+          - name: ui-wououi
+            path: 'examples/ui/wououi/main'
+            targets: ['esp32s3']
+          - name: usb-host
+            path: 'examples/usb/host'
+            targets: ['esp32s3']
+          - name: usb-device
+            path: 'examples/usb/device'
+            targets: ['esp32s3']
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
         with:
-          submodules: 'true'
-      - name: build esp demos
-        shell: bash
-        run: |
-          . ${IDF_PATH}/export.sh
-          pip install idf-component-manager==1.5.2 idf-build-apps --upgrade
-          idf-build-apps find -p . --recursive --target esp32s3 -vvvv
-          idf-build-apps build -p . --recursive --target esp32s3 -vvvv
+          submodules: 'recursive'
+
+      - name: esp-idf build
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: 'latest'
+          target: ${{ matrix.project.targets[0] }}
+          path: ${{ matrix.project.path }}
