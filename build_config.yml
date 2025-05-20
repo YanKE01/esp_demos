@@ -1,0 +1,112 @@
+projects:
+  - path: examples/algorithm/mfcc
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/audio/esp_sr
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/audio/max98357a
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/audio/record_play
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/audio/record_save
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/dl/boston_housing/esp_boston
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/dl/cifar10/esp_cifar10
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/dl/mnist/esp_mnist
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/dl/sin_wave_predict/esp_sin_wave_predict
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/peripherals/can/can_alert
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/peripherals/can/can_simple_test
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/peripherals/gpio/gpio_flip
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/peripherals/i2c/i2c_bus
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/peripherals/lcd/lcd_jpg
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/peripherals/lcd/oled
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/peripherals/pcnt/basic_pcnt
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/peripherals/pwm/complementary_pwm
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/protocols/json
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/protocols/modbus/master/modbus_serial_master
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/protocols/modbus/slave/modbus_serial_slave
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/protocols/protobuf
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/protocols/protobuf_c
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/ui/lvgl/lcd_camera_lvgl
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/ui/lvgl/lvgl_spiffs
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/ui/wououi
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/usb/device/cdc_device
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/usb/device/hid_device_audio_ctrl
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/usb/device/hid_device_keyboard
+    idf_version: release-v5.4
+    target: esp32s3

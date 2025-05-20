@@ -1,22 +1,44 @@
-name: Build with ESP-IDF v5.4
+name: Build with ESP-IDF
 
 on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        idf_ver: ["release-v5.4"]
-    container: espressif/idf:${{matrix.idf_ver}}
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: 'true'
-      - name: build esp demos
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+      - name: Build projects
         shell: bash
         run: |
-          . ${IDF_PATH}/export.sh
-          pip install idf-component-manager==1.5.2 idf-build-apps --upgrade
-          idf-build-apps find -p . --recursive --target esp32s3 -vvvv
-          idf-build-apps build -p . --recursive --target esp32s3 -vvvv
+          # Read the configuration file
+          while IFS= read -r line; do
+            if [[ $line =~ path:[[:space:]]*([^[:space:]]+) ]]; then
+              project_path="${BASH_REMATCH[1]}"
+            elif [[ $line =~ idf_version:[[:space:]]*([^[:space:]]+) ]]; then
+              idf_version="${BASH_REMATCH[1]}"
+            elif [[ $line =~ target:[[:space:]]*([^[:space:]]+) ]]; then
+              target="${BASH_REMATCH[1]}"
+              if [ ! -z "$project_path" ] && [ ! -z "$idf_version" ] && [ ! -z "$target" ]; then
+                echo "Building $project_path with IDF $idf_version for $target"
+                docker run --rm -v $PWD:/workspace -w /workspace espressif/idf:$idf_version bash -c "
+                  . ${IDF_PATH}/export.sh
+                  cd $project_path
+                  idf.py set-target $target
+                  idf.py build
+                "
+                project_path=""
+                idf_version=""
+                target=""
+              fi
+            fi
+          done < build_config.yml

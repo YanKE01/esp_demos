@@ -1,6 +1,8 @@
 # MAX98357A
 
-### 接线说明：
+This project demonstrates how to implement audio playback based on the MAX98357A.
+
+### Wiring Instructions:
 
 | **MAX98357A** | **ESP32** |
 |:-------------:|:---------:|

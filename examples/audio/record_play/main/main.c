@@ -4,7 +4,7 @@
 #include "hal_i2s.h"
 #include "freertos/ringbuf.h"
 
-#define BYTE_RATE 16 * 1000 * (I2S_DATA_BIT_WIDTH_16BIT / 8) * 1 // 我们是I2S_DATA_BIT_WIDTH_16BIT，所以占2个字节
+#define BYTE_RATE 16 * 1000 * (I2S_DATA_BIT_WIDTH_16BIT / 8) * 1 // We are using I2S_DATA_BIT_WIDTH_16BIT, so it takes 2 bytes
 int rec_time = 5;
 int32_t i2s_readraw_buff[I2S_DATA_BIT_WIDTH_16BIT * 1024];
 size_t bytes_read = 0;
