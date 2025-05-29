@@ -103,6 +103,10 @@ projects:
     idf_version: release-v5.4
     target: esp32s3
 
+  - path: examples/usb/device/bulk_trans
+    idf_version: release-v5.4
+    target: esp32s3
+
   - path: examples/usb/device/hid_device_audio_ctrl
     idf_version: release-v5.4
     target: esp32s3

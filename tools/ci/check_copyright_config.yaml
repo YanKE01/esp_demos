@@ -41,3 +41,4 @@ ignore:  # You can also select ignoring files here
  perform_check: no  # Don't check files from that block
  include:
    - 'esp_video/include/linux/**/*'
+   - '../../examples/usb/device/bulk_trans/main/tusb/**/*'
