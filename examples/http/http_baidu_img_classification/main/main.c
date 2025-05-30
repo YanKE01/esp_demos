@@ -25,7 +25,7 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
     // Connect WIFI
-    app_wifi_init("MERCURY_5B00", "tzyjy12345678");
+    app_wifi_init(CONFIG_EXAMPLE_WIFI_SSID, CONFIG_EXAMPLE_WIFI_PSWD);
 
     // Mount spiffs
     ESP_ERROR_CHECK(hal_spiffs_init("/spiffs"));
@@ -42,14 +42,14 @@ void app_main(void)
     rewind(f);
     ESP_LOGI(TAG, "File size:%zu", filesize);
 
-    file_buf = (char *)malloc(filesize + 1); // 加1是为了存放字符串结束符
+    file_buf = (char *)malloc(filesize + 1);
     if (file_buf == NULL) {
         fprintf(stderr, "Memory allocation failed.\n");
         fclose(f);
         return;
     }
 
-    // 读取文件内容
+    // Read the file
     if (fread(file_buf, 1, filesize, f) != filesize) {
         fprintf(stderr, "Failed to read the file.\n");
         fclose(f);
@@ -57,7 +57,7 @@ void app_main(void)
         return;
     }
 
-    // 关闭文件
+    // Close the file
     fclose(f);
 
     app_baidu_classification(file_buf, filesize);

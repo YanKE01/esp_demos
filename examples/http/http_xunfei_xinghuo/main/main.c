@@ -7,8 +7,8 @@
 #include "esp_heap_caps.h"
 
 char *xf_url = "https://spark-api-open.xf-yun.com/v1/chat/completions";
-char *xf_key = "";
-char *xf_secret = "";
+char *xf_key = CONFIG_EXAMPLE_XF_KEY;
+char *xf_secret = CONFIG_EXAMPLE_XF_SECRET;
 char *xf_authorization_formate = "Bearer %s:%s";
 char *xf_message = "{\"model\": \"generalv3.5\", \"messages\": [{\"role\": \"user\", \"content\": \"你是谁\"}]}";
 
@@ -35,7 +35,7 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
     // Connect wifi
-    app_wifi_init("1401", "15201882219");
+    app_wifi_init(CONFIG_EXAMPLE_WIFI_SSID, CONFIG_EXAMPLE_WIFI_PSWD);
 
     // Set http
     esp_http_client_config_t config = {

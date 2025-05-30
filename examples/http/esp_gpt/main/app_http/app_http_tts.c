@@ -6,7 +6,7 @@
 static const char *TAG = "BAIDU TTS";
 esp_http_client_handle_t tts_client;
 static char *url = "https://tsn.baidu.com/text2audio";
-static char *access_token = "24.23d20894d86ee25c834f2f15c757d225.2592000.1715916123.282335-60592936";
+static char *access_token = CONFIG_EXAMPLE_ACCESS_TOKEN;
 static char *formate = "tex=%s&tok=%s&cuid=mpBNOBqqTHmz93GbNEZDm5vUnwV0Lnm1&ctp=1&lan=zh&spd=5&pit=5&vol=0&per=4&aue=4"; // PCM 16K
 
 esp_err_t app_http_baidu_tts_event_handler(esp_http_client_event_t *evt)

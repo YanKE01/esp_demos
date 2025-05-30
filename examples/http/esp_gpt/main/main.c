@@ -58,7 +58,7 @@ void app_main(void)
     ESP_ERROR_CHECK(hal_i2s_microphone_init(i2s_microphone_config));
 
     // Init wifi
-    app_wifi_init("ChinaUnicom-3LRNAS", "244244244");
+    app_wifi_init(CONFIG_EXAMPLE_WIFI_SSID, CONFIG_EXAMPLE_WIFI_PSWD);
 
     // Init button
     button_config_t btn_cfg = {

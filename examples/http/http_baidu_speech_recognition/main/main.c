@@ -21,7 +21,7 @@ i2s_microphone_config_t i2s_microphone_config = {
     .bits_per_sample = I2S_DATA_BIT_WIDTH_16BIT,
 };
 
-char *access_token = "24.4c1cacd26dc1b0f768a3b48ca393bd8c.2592000.1715692765.282335-60592936";
+char *access_token = CONFIG_EXAMPLE_ACCESS_TOKEN;
 char *url_formate = "http://vop.baidu.com/server_api?dev_pid=1537&cuid=dPKArKm9yCGIOwPoCSjTDzmIIj4cBsEV&token=%s";
 esp_http_client_handle_t client;
 
@@ -49,7 +49,7 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
     // Connect WIFI
-    app_wifi_init("MERCURY_5B00", "tzyjy12345678");
+    app_wifi_init(CONFIG_EXAMPLE_WIFI_SSID, CONFIG_EXAMPLE_WIFI_PSWD);
 
     // Init spiffs
     ESP_ERROR_CHECK(app_spiffs_init("/spiffs"));

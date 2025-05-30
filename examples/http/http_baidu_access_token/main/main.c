@@ -10,8 +10,8 @@
 #include <json_parser.h>
 
 static const char *TAG = "BAIDU_ACCESS_TOKEN";
-char *client_id = "VHmYbhR424X5zfTRooHYD7ve";
-char *client_secret = "ODH92wNoceW8kXtgxoxCyHidhWfeX8YV";
+char *client_id = CONFIG_EXAMPLE_CLIENT_ID;
+char *client_secret = CONFIG_EXAMPLE_CLIENT_SECRET;
 char *url_format = "https://aip.baidubce.com/oauth/2.0/token?client_id=%s&client_secret=%s&grant_type=client_credentials";
 char access_token[256] = {0};
 esp_http_client_handle_t client;
@@ -48,7 +48,7 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
     // Connect WIFI
-    app_wifi_init("MERCURY_5B00", "tzyjy12345678");
+    app_wifi_init(CONFIG_EXAMPLE_WIFI_SSID, CONFIG_EXAMPLE_WIFI_PSWD);
 
     // Http
     esp_http_client_config_t config = {

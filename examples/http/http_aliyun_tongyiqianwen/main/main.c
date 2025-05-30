@@ -13,7 +13,7 @@ static const char *TAG = "HTTP_TONGYI";
 esp_http_client_handle_t client;
 QueueHandle_t xQueue;
 char *tongyi_url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation";
-char *key = "";
+char *key = CONFIG_EXAMPLE_TONGYI_KEY;
 char *format = "{\"model\": \"qwen-turbo\",\"input\": {\"messages\": [{\"role\": \"system\",\"content\": \"You are a helpful assistant.\"},{\"role\": \"user\",\"content\": \"%s\"}]},\"parameters\": {\"result_format\": \"message\"}}";
 
 esp_err_t app_http_tongyi_event_handler(esp_http_client_event_t *evt)
@@ -77,7 +77,7 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
     // Connect WIFI
-    app_wifi_init("MERCURY_5B00", "tzyjy12345678");
+    app_wifi_init(CONFIG_EXAMPLE_WIFI_SSID, CONFIG_EXAMPLE_WIFI_PSWD);
 
     // Init queue
     xQueue = xQueueCreate(10, 1024);

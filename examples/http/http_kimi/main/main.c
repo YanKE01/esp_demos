@@ -8,7 +8,7 @@
 
 static const char *TAG = "KIMI";
 char *kimi_url = "https://api.moonshot.cn/v1/chat/completions";
-char *kimi_key = "";
+char *kimi_key = CONFIG_EXAMPLE_KIMI_KEY;
 char *kimi_authorization_formate = "Bearer %s";
 char *kimi_message = "{\"model\": \"moonshot-v1-8k\",\"messages\": [{\"role\": \"system\", \"content\": \"you are Kimi\"},{\"role\": \"user\", \"content\": \"hello,good morning\"}],\"temperature\": 0.3}";
 esp_http_client_handle_t client;
@@ -33,7 +33,7 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
     // Connect wifi
-    app_wifi_init("1401", "15201882219");
+    app_wifi_init(CONFIG_EXAMPLE_WIFI_SSID, CONFIG_EXAMPLE_WIFI_PSWD);
 
     // Set http
     esp_http_client_config_t config = {

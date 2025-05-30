@@ -6,7 +6,7 @@
 #include "app_http_tongyi.h"
 
 static const char *TAG = "BAIDU ASR";
-char *access_token = "25.5d2271f2f6537871c8576a94aea77de0.315360000.2028702861.282335-60592936";
+char *access_token = CONFIG_EXAMPLE_ACCESS_TOKEN;
 char *url_formate = "http://vop.baidu.com/server_api?dev_pid=1537&cuid=dPKArKm9yCGIOwPoCSjTDzmIIj4cBsEV&token=%s";
 esp_http_client_handle_t asr_client;
 char asr_result[1024] = {};

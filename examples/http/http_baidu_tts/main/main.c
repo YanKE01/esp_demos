@@ -14,9 +14,9 @@
 static const char *TAG = "HTTP_BAIDU";
 esp_http_client_handle_t client;
 char *url = "https://tsn.baidu.com/text2audio";
-char *access_token = "24.3ff7eb10fd7de8342cf12fde2fd35194.2592000.1715402191.282335-60592936";
+char *access_token = CONFIG_EXAMPLE_ACCESS_TOKEN;
 char *formate = "tex=%s&tok=%s&cuid=mpBNOBqqTHmz93GbNEZDm5vUnwV0Lnm1&ctp=1&lan=zh&spd=5&pit=5&vol=5&per=4&aue=4"; // PCM 16K
-char *text = "早上好,下午好,晚上好";
+char *text = "Good morning";
 size_t text_url_encode_size = 0;
 
 i2s_chan_handle_t i2s_tx_chan;
@@ -44,8 +44,7 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
     // Connect WIFI
-    // app_wifi_init("ChinaUnicom-3LRNAS", "244244244");
-    app_wifi_init("MERCURY_5B00", "tzyjy12345678");
+    app_wifi_init(CONFIG_EXAMPLE_WIFI_SSID, CONFIG_EXAMPLE_WIFI_PSWD);
 
     // Init audio
     audio_i2s_init(I2S_NUM_0, GPIO_NUM_3, &i2s_tx_chan, 16 * 1000);
