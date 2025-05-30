@@ -1,7 +1,10 @@
-# Voice activated light project based on ESP-SR
-This is an esp-sr based voice activated light learning project. The hardware and software used in the project are as follows:
-* idf 5.1
-* esp_sr: 1.6.1
-* esp32-s3 N16R8
+# Voice-Activated Light Project Based on ESP-SR
 
+This project demonstrates a voice-activated lighting system built with ESP-SR technology. It serves as an educational example for implementing speech recognition in IoT applications.
+
+## Environment and Requirements
+
+* ESP-IDF version: 5.1
+* ESP-SR library: 1.6.1
+* Hardware: ESP32-S3 with 16MB Flash and 8MB PSRAM (N16R8)
 
