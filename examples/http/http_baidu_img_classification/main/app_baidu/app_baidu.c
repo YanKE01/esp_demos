@@ -7,7 +7,7 @@
 
 static const char *TAG = "HTTP_BAIDU";
 
-char access_token[256] = "24.fe3e85829eb140d1ed7725eacf1eb8ad.2592000.1715228423.282335-56823135";
+char access_token[256] = CONFIG_EXAMPLE_ACCESS_TOKEN;
 char base_url[256] = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general";
 
 esp_err_t app_http_baidu_event_handler(esp_http_client_event_t *evt)

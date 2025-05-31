@@ -1,0 +1,21 @@
+menu "Example Configuration"
+
+    config EXAMPLE_ACCESS_TOKEN
+        string "Baidu Access Token"
+        default "baidu_access_token"
+        help
+                Access token for baidu.
+
+    config EXAMPLE_WIFI_SSID
+        string "wifi ssid"
+        default "my_wifi_ssid"
+        help
+                Wifi SSID.
+
+    config EXAMPLE_WIFI_PSWD
+        string "wifi pswd"
+        default "my_wifi_pswd"
+        help
+                Wifi PASSWORD.
+
+endmenu

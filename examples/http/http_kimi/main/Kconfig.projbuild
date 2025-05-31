@@ -1,0 +1,21 @@
+menu "Example Configuration"
+
+    config EXAMPLE_KIMI_KEY
+        string "Kimi Api Key"
+        default "kimi_api_key"
+        help
+                API key for kimi model.
+
+    config EXAMPLE_WIFI_SSID
+        string "wifi ssid"
+        default "my_wifi_ssid"
+        help
+                Wifi SSID.
+
+    config EXAMPLE_WIFI_PSWD
+        string "wifi pswd"
+        default "my_wifi_pswd"
+        help
+                Wifi PASSWORD.
+
+endmenu

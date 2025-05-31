@@ -35,6 +35,38 @@ projects:
     idf_version: release-v5.4
     target: esp32s3
 
+  - path: examples/http/esp_gpt
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/http/http_aliyun_tongyiqianwen
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/http/http_baidu_access_token
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/http/http_baidu_img_classification
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/http/http_baidu_speech_recognition
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/http/http_baidu_tts
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/http/http_kimi
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/http/http_xunfei_xinghuo
+    idf_version: release-v5.4
+    target: esp32s3
+
   - path: examples/peripherals/can/can_alert
     idf_version: release-v5.4
     target: esp32s3

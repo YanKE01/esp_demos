@@ -1,0 +1,27 @@
+menu "Example Configuration"
+
+    config EXAMPLE_XF_KEY
+        string "XF Api Key"
+        default "xf_api_key"
+        help
+                API key for xf model.
+
+    config EXAMPLE_XF_SECRET
+        string "XF Api Secret"
+        default "xf_api_secret"
+        help
+                API secret for xf model.
+
+    config EXAMPLE_WIFI_SSID
+        string "wifi ssid"
+        default "my_wifi_ssid"
+        help
+                Wifi SSID.
+
+    config EXAMPLE_WIFI_PSWD
+        string "wifi pswd"
+        default "my_wifi_pswd"
+        help
+                Wifi PASSWORD.
+
+endmenu

@@ -1,0 +1,21 @@
+menu "Example Configuration"
+
+    config EXAMPLE_TONGYI_KEY
+        string "Tongyi Key"
+        default "tongyi_key"
+        help
+                API Key for tongyi.
+
+    config EXAMPLE_WIFI_SSID
+        string "wifi ssid"
+        default "my_wifi_ssid"
+        help
+                Wifi SSID.
+
+    config EXAMPLE_WIFI_PSWD
+        string "wifi pswd"
+        default "my_wifi_pswd"
+        help
+                Wifi PASSWORD.
+
+endmenu
