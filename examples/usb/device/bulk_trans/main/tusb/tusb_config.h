@@ -108,8 +108,8 @@ extern "C" {
 /*!< Vendor Class */
 #define CFG_TUD_VENDOR               1
 #define VENDOR_BUF_SIZE              (CONFIG_USB_HS ? 512 : 64)
-#define CFG_TUD_VENDOR_RX_BUFSIZE    (VENDOR_BUF_SIZE * 10)
-#define CFG_TUD_VENDOR_TX_BUFSIZE    VENDOR_BUF_SIZE
+#define CFG_TUD_VENDOR_RX_BUFSIZE    (VENDOR_BUF_SIZE * 15)
+#define CFG_TUD_VENDOR_TX_BUFSIZE    (VENDOR_BUF_SIZE * 15)
 #ifndef CFG_TUD_VENDOR_EPSIZE
 #define CFG_TUD_VENDOR_EPSIZE        VENDOR_BUF_SIZE
 #endif
