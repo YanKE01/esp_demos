@@ -135,6 +135,10 @@ projects:
     idf_version: release-v5.4
     target: esp32s3
 
+  - path: examples/usb/cherryusb/device/vendor_bulk
+    idf_version: release-v5.4
+    target: esp32s3
+
   - path: examples/usb/device/cdc_device
     idf_version: release-v5.4
     target: esp32s3
