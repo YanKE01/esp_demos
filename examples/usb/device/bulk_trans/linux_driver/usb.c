@@ -1,138 +1,174 @@
+// SPDX-License-Identifier: GPL
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/usb.h>
-#include <linux/crc16.h>
 #include <linux/kernel.h>
+#include <linux/slab.h>
+#include <linux/completion.h>
+#include <linux/timekeeping.h>
 
-#define BULK_PACKET_MAX_SIZE 64
-#define PROTOCOL_HEADER_SIZE 6
-#define PAYLOAD_SIZE (BULK_PACKET_MAX_SIZE - PROTOCOL_HEADER_SIZE)
-#define RX_BUFFER_SIZE 1024 // Receive buffer size
-
-struct usb_packet_header {
-    uint16_t total_len;
-    uint16_t crc16;
-} __attribute__((packed));
+#define TX_BUFFER_SIZE     1728
+#define TEST_ROUND_COUNT   1000
+int count =0;
 
 static const struct usb_device_id id_table[] = {
-    {
-        .idVendor = 0xcafe,
-        .idProduct = 0x4001,
-        .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_PRODUCT,
-    },
-    {},
+    {USB_DEVICE(0xcafe, 0x4001)},
+    {}};
+MODULE_DEVICE_TABLE(usb, id_table);
+
+struct async_context {
+    struct usb_device *udev;
+    int out_pipe;
+    int in_pipe;
+
+    struct completion out_done;
+    struct completion in_done;
+
+    atomic_t out_completed;
+    atomic_t in_completed;
+
+    ktime_t start;
 };
 
-static uint16_t crc16_ccitt(const uint8_t *data, uint16_t len, uint16_t init)
+static void bulk_out_urb_complete(struct urb *urb)
 {
-    uint16_t crc = init;
-    while (len--) {
-        crc ^= (*data++) << 8;
-        for (int i = 0; i < 8; i++) {
-            if (crc & 0x8000) {
-                crc = (crc << 1) ^ 0x1021;
-            } else {
-                crc <<= 1;
-            }
-        }
+    struct async_context *ctx = urb->context;
+    if (urb->status)
+        pr_err("URB OUT error: %d\n", urb->status);
+
+    if (atomic_inc_return(&ctx->out_completed) == TEST_ROUND_COUNT)
+        complete(&ctx->out_done);
+
+    usb_free_urb(urb);
+    kfree(urb->transfer_buffer);
+}
+
+static void bulk_in_urb_complete(struct urb *urb)
+{
+    struct async_context *ctx = urb->context;
+    if (urb->status){
+        pr_err("URB IN error: %d\n", urb->status);
+    } else {
+        count++;
+        pr_info("Received %d bytes from device, count: %d\n", urb->actual_length, count);
+        // print_hex_dump(KERN_INFO, "USB IN: ", DUMP_PREFIX_OFFSET, 16, 1,
+        //                urb->transfer_buffer, urb->actual_length, false);
     }
-    return crc;
+
+    if (atomic_inc_return(&ctx->in_completed) == TEST_ROUND_COUNT)
+        complete(&ctx->in_done);
+
+    usb_free_urb(urb);
+    kfree(urb->transfer_buffer);
 }
 
 static int esp_usb_probe(struct usb_interface *interface, const struct usb_device_id *id)
 {
-    pr_info("USB device detected.\n");
-    struct usb_host_interface *iface_desc = NULL;
-    struct usb_endpoint_descriptor *endpoint = NULL;
     struct usb_device *udev = interface_to_usbdev(interface);
+    struct usb_host_interface *iface_desc = interface->cur_altsetting;
+    struct usb_endpoint_descriptor *endpoint;
+    struct async_context *ctx;
+    uint8_t *buf;
+    int i, retval = 0;
+    int out_pipe = 0, in_pipe = 0;
 
-    int in_pipe = 0, out_pipe = 0;
+    pr_info("USB device detected.\n");
 
-    // find input and oupt endpoint
-    iface_desc = interface->cur_altsetting;
-    for (int i = 0; i < iface_desc->desc.bNumEndpoints; i++) {
+    for (i = 0; i < iface_desc->desc.bNumEndpoints; i++) {
         endpoint = &iface_desc->endpoint[i].desc;
 
         if (usb_endpoint_is_bulk_out(endpoint)) {
-            pr_info("Found bulk OUT endpoint: 0x%02x\n", endpoint->bEndpointAddress);
             out_pipe = usb_sndbulkpipe(udev, endpoint->bEndpointAddress);
-        }
-
-        if (usb_endpoint_is_bulk_in(endpoint)) {
-            pr_info("Found bulk IN endpoint: 0x%02x\n", endpoint->bEndpointAddress);
+            pr_info("Found bulk OUT endpoint: 0x%02x\n", endpoint->bEndpointAddress);
+        } else if (usb_endpoint_is_bulk_in(endpoint)) {
             in_pipe = usb_rcvbulkpipe(udev, endpoint->bEndpointAddress);
+            pr_info("Found bulk IN endpoint: 0x%02x\n", endpoint->bEndpointAddress);
         }
     }
 
-    // Test sync transfer
-    int total_len = 640;
-    uint8_t *tx_buf = kzalloc(sizeof(struct usb_packet_header) + total_len, GFP_KERNEL);
-    if (!tx_buf) {
+    if (!out_pipe || !in_pipe) {
+        pr_err("Missing required bulk endpoints\n");
+        return -ENODEV;
+    }
+
+    ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+    if (!ctx)
         return -ENOMEM;
+
+    ctx->udev = usb_get_dev(udev);
+    ctx->out_pipe = out_pipe;
+    ctx->in_pipe = in_pipe;
+    init_completion(&ctx->out_done);
+    init_completion(&ctx->in_done);
+    atomic_set(&ctx->out_completed, 0);
+    atomic_set(&ctx->in_completed, 0);
+
+    pr_info("Submitting %d async OUT and IN URBs...\n", TEST_ROUND_COUNT);
+    ctx->start = ktime_get();
+
+    for (i = 0; i < TEST_ROUND_COUNT; i++) {
+        struct urb *urb = usb_alloc_urb(0, GFP_KERNEL);
+        if (!urb) {
+            retval = -ENOMEM;
+            break;
+        }
+        buf = kmalloc(TX_BUFFER_SIZE, GFP_KERNEL);
+        if (!buf) {
+            usb_free_urb(urb);
+            retval = -ENOMEM;
+            break;
+        }
+        memset(buf, 0xA5, TX_BUFFER_SIZE);
+        usb_fill_bulk_urb(urb, ctx->udev, ctx->out_pipe,
+                          buf, TX_BUFFER_SIZE,
+                          bulk_out_urb_complete, ctx);
+        retval = usb_submit_urb(urb, GFP_KERNEL);
+        if (retval) {
+            pr_err("Submit OUT failed: %d\n", retval);
+            usb_free_urb(urb);
+            kfree(buf);
+            break;
+        }
     }
 
-    // Construct packet header
-    struct usb_packet_header *hdr = (struct usb_packet_header *)tx_buf;
-    hdr->total_len = cpu_to_le16(total_len);
+    // for (i = 0; i < TEST_ROUND_COUNT; i++) {
+    //     struct urb *urb = usb_alloc_urb(0, GFP_KERNEL);
+    //     if (!urb) {
+    //         retval = -ENOMEM;
+    //         break;
+    //     }
+    //     buf = kmalloc(TX_BUFFER_SIZE, GFP_KERNEL);
+    //     if (!buf) {
+    //         usb_free_urb(urb);
+    //         retval = -ENOMEM;
+    //         break;
+    //     }
+    //     usb_fill_bulk_urb(urb, ctx->udev, ctx->in_pipe,
+    //                       buf, TX_BUFFER_SIZE,
+    //                       bulk_in_urb_complete, ctx);
+    //     retval = usb_submit_urb(urb, GFP_KERNEL);
+    //     if (retval) {
+    //         pr_err("Submit IN failed: %d\n", retval);
+    //         usb_free_urb(urb);
+    //         kfree(buf);
+    //         break;
+    //     }
+    // }
 
-    // Construct packet data
-    for (int i = 0; i < total_len; i++) {
-        tx_buf[sizeof(struct usb_packet_header) + i] = i % 255;
-    }
+    wait_for_completion(&ctx->out_done);
+    // wait_for_completion(&ctx->in_done);
 
-    hdr->crc16 = cpu_to_le16(crc16_ccitt(tx_buf + sizeof(*hdr), total_len, 0x0000));
+    ktime_t end = ktime_get();
+    s64 duration_ns = ktime_to_ns(ktime_sub(end, ctx->start));
+    u64 total_bytes = (u64)TX_BUFFER_SIZE * TEST_ROUND_COUNT * 1;
+    u64 speed_kbps = total_bytes * 8 * 1000000 / duration_ns;
 
-    int actual_length = 0, ret = 0;
-    ret = usb_bulk_msg(udev, out_pipe, tx_buf, total_len + sizeof(struct usb_packet_header), &actual_length, 1000);
-    if (ret < 0) {
-        pr_err("USB bulk write failed: %d\n", ret);
-    } else {
-        pr_info("Wrote %d bytes to USB bulk endpoint, crc: 0x%04x\n", actual_length, le16_to_cpu(hdr->crc16));
-    }
+    pr_info("Async Bulk IN+OUT: %llu bytes in %lld ns → ~%llu kbps (~%llu KB/s)\n",
+            total_bytes, duration_ns, speed_kbps, speed_kbps / 8);
 
-    kfree(tx_buf);
-
-    // Read response from device
-    uint8_t *rx_buf = kzalloc(RX_BUFFER_SIZE, GFP_KERNEL);
-    if (!rx_buf) {
-        pr_err("Failed to allocate receive buffer\n");
-        return -ENOMEM;
-    }
-
-    int rx_actual_length = 0;
-    ret = usb_bulk_msg(udev, in_pipe, rx_buf, RX_BUFFER_SIZE, &rx_actual_length, 2000);
-    if (ret < 0) {
-        pr_err("USB bulk read failed: %d\n", ret);
-        kfree(rx_buf);
-        return ret;
-    }
-
-    pr_info("Received %d bytes from device\n", rx_actual_length);
-
-    // Decode packet header
-    struct usb_packet_header *rx_hdr = (struct usb_packet_header *)rx_buf;
-    uint16_t rx_total_len = le16_to_cpu(rx_hdr->total_len);
-    uint16_t rx_crc16 = le16_to_cpu(rx_hdr->crc16);
-
-    pr_info("Header: total_len=%d, crc16=0x%04x\n", rx_total_len, rx_crc16);
-    pr_info("Expected header size: %zu bytes\n", sizeof(struct usb_packet_header));
-    pr_info("Actual received data size: %d bytes\n", rx_actual_length);
-
-    // Verify CRC
-    uint16_t calculated_crc = crc16_ccitt(rx_buf + sizeof(struct usb_packet_header), rx_total_len, 0x0000);
-    if (calculated_crc != rx_crc16) {
-        pr_err("CRC verification failed: expected 0x%04x, got 0x%04x\n", rx_crc16, calculated_crc);
-    } else {
-        pr_info("CRC verification passed\n");
-    }
-
-    // Print received data
-    pr_info("Last byte: %02x\n", rx_buf[rx_actual_length - 1]);
-
-
-    kfree(rx_buf);
-
-    return 0;
+    usb_put_dev(ctx->udev);
+    kfree(ctx);
+    return retval;
 }
 
 static void esp_usb_disconnect(struct usb_interface *interface)
@@ -141,7 +177,7 @@ static void esp_usb_disconnect(struct usb_interface *interface)
 }
 
 static struct usb_driver esp_usb_driver = {
-    .name = "esp_usb_driver",
+    .name = "esp_usb_async_driver",
     .probe = esp_usb_probe,
     .disconnect = esp_usb_disconnect,
     .id_table = id_table,
@@ -149,13 +185,13 @@ static struct usb_driver esp_usb_driver = {
 
 static int __init esp_usb_init(void)
 {
-    pr_info("ESP_USB module loaded.\n");
+    pr_info("ESP_USB async module loaded.\n");
     return usb_register(&esp_usb_driver);
 }
 
 static void __exit esp_usb_exit(void)
 {
-    pr_info("ESP_USB module unloaded.\n");
+    pr_info("ESP_USB async module unloaded.\n");
     usb_deregister(&esp_usb_driver);
 }
 
@@ -163,6 +199,6 @@ module_init(esp_usb_init);
 module_exit(esp_usb_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Yanke2@espressif.com");
-MODULE_DESCRIPTION("Test USB Bulk Transfer Linux Driver");
-MODULE_VERSION("1.0");
+MODULE_AUTHOR("Yanke2@espressif.com + ChatGPT");
+MODULE_DESCRIPTION("Async USB Bulk IN/OUT Test Driver");
+MODULE_VERSION("1.1");
