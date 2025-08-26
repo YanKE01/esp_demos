@@ -99,6 +99,14 @@ projects:
     idf_version: release-v5.4
     target: esp32s3
 
+  - path: examples/peripherals/rmt/rmt_simple_tx
+    idf_version: release-v5.4
+    target: esp32s3
+
+  - path: examples/peripherals/rmt/ws2812_simple_encoder
+    idf_version: release-v5.4
+    target: esp32s3
+
   - path: examples/peripherals/spi/spi_basic
     idf_version: release-v5.4
     target: esp32s3
