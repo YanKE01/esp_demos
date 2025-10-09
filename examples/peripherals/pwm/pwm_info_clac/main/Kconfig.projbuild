@@ -1,0 +1,9 @@
+menu "Example Configuration"
+
+    config PWM_CAPTURE_IO
+        int "Pwm Capture Io"
+        default 2
+        help
+           Example used gpio for capture pwm.
+
+endmenu
