@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>WebUSB Read/Write Test</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2em auto; padding: 0 1em; }
+    button { margin: 0.25em; padding: 0.5em 1em; cursor: pointer; }
+    #log { background: #f5f5f5; padding: 0.5em; font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto; white-space: pre-wrap; }
+    input[type="text"] { width: 100%; padding: 0.5em; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <h1>WebUSB Read/Write Test</h1>
+  <p>The device echoes back received data. Open this page in <b>Chrome</b> over <b>https</b> or <b>localhost</b>.</p>
+  <button id="btnConnect">Connect device</button>
+  <button id="btnDisconnect" disabled>Disconnect</button>
+  <p>
+    <input type="text" id="inputData" placeholder="Enter string to send" value="Hello WebUSB">
+    <button id="btnSend" disabled>Send and read back</button>
+  </p>
+  <div id="log"></div>
+
+  <script>
+    const VID = 0x303A;
+    const PID = 0x8002;
+    const EP_OUT = 1;
+    const EP_IN = 1;
+
+    let device = null;
+    const logEl = document.getElementById('log');
+    const log = (msg) => {
+      logEl.textContent += new Date().toLocaleTimeString() + ' ' + msg + '\n';
+      logEl.scrollTop = logEl.scrollHeight;
+    };
+
+    document.getElementById('btnConnect').onclick = async () => {
+      try {
+        device = await navigator.usb.requestDevice({ filters: [{ vendorId: VID, productId: PID }] });
+        log('Device selected: ' + (device.productName || 'WebUSB Demo'));
+        await device.open();
+        if (device.configuration === null) await device.selectConfiguration(1);
+        await device.claimInterface(0);
+        log('Connected and claimed interface 0');
+        document.getElementById('btnConnect').disabled = true;
+        document.getElementById('btnDisconnect').disabled = false;
+        document.getElementById('btnSend').disabled = false;
+      } catch (e) {
+        log('Error: ' + e.message);
+      }
+    };
+
+    document.getElementById('btnDisconnect').onclick = async () => {
+      if (!device) return;
+      try {
+        await device.releaseInterface(0);
+        await device.close();
+      } catch (e) {}
+      device = null;
+      log('Disconnected');
+      document.getElementById('btnConnect').disabled = false;
+      document.getElementById('btnDisconnect').disabled = true;
+      document.getElementById('btnSend').disabled = true;
+    };
+
+    document.getElementById('btnSend').onclick = async () => {
+      if (!device) return;
+      const str = document.getElementById('inputData').value;
+      const data = new TextEncoder().encode(str);
+      try {
+        const outResult = await device.transferOut(EP_OUT, data);
+        log('Sent ' + outResult.bytesWritten + ' bytes, status=' + outResult.status);
+        const inResult = await device.transferIn(EP_IN, Math.max(64, data.length + 16));
+        if (inResult.status === 'ok' && inResult.data) {
+          const recv = new TextDecoder().decode(inResult.data.buffer);
+          log('Received ' + inResult.data.byteLength + ' bytes: ' + recv);
+        } else {
+          log('Receive status=' + inResult.status);
+        }
+      } catch (e) {
+        log('Transfer error: ' + e.message);
+      }
+    };
+  </script>
+</body>
+</html>
