@@ -1,0 +1,42 @@
+# NS4150 Player pin and audio configuration
+
+menu "NS4150 Player Configuration"
+
+    config NS4150_PDM_P_GPIO
+        int "PDM P (data) GPIO"
+        default 7
+        range 0 48
+        help
+            GPIO connected to NS4150 PDM data input (P side).
+
+    config NS4150_USE_PDM_N
+        bool "Enable PDM N output (differential)"
+        default y
+        help
+            Enable inverted PDM N output for differential drive.
+            Disable if your board uses single-ended output only (PDM N not connected).
+
+    config NS4150_PDM_N_GPIO
+        int "PDM N GPIO"
+        default 8
+        depends on NS4150_USE_PDM_N
+        range 0 48
+        help
+            GPIO for NS4150 PDM N (inverted output). Ignored when "Enable PDM N" is off.
+
+    config NS4150_USE_PA_CTL
+        bool "Enable PA control GPIO"
+        default y
+        help
+            Enable GPIO to control amplifier power/shutdown.
+            Disable if PA is always on or not controlled by MCU.
+
+    config NS4150_PA_CTL_GPIO
+        int "PA control GPIO"
+        default 1
+        depends on NS4150_USE_PA_CTL
+        range 0 48
+        help
+            GPIO for amplifier enable (high = on).
+
+endmenu

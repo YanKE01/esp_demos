@@ -11,6 +11,10 @@ projects:
     idf_version: release-v5.5
     target: esp32s3
 
+  - path: examples/audio/ns4150_player
+    idf_version: release-v5.5
+    target: esp32c5
+
   - path: examples/audio/record_play
     idf_version: release-v5.5
     target: esp32s3
