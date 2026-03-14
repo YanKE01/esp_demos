@@ -1,0 +1,116 @@
+menu "Music Spectrum Configuration"
+
+    menu "LED Matrix"
+        config MUSIC_SPECTRUM_MATRIX_WIDTH
+            int "Matrix width"
+            range 1 64
+            default 16
+
+        config MUSIC_SPECTRUM_MATRIX_HEIGHT
+            int "Matrix height"
+            range 1 64
+            default 16
+
+        config MUSIC_SPECTRUM_LED_GPIO
+            int "LED data GPIO"
+            range 0 48
+            default 18
+
+        config MUSIC_SPECTRUM_RMT_RES_HZ
+            int "LED RMT resolution (Hz)"
+            range 1000000 40000000
+            default 10000000
+
+        config MUSIC_SPECTRUM_RMT_MEM_WORDS
+            int "LED RMT memory block symbols"
+            range 64 2048
+            default 1024
+
+        config MUSIC_SPECTRUM_LED_BRIGHTNESS_PERCENT
+            int "LED brightness percent"
+            range 1 100
+            default 18
+    endmenu
+
+    menu "Microphone"
+        config MUSIC_SPECTRUM_MIC_I2S_PORT
+            int "Microphone I2S port"
+            range 0 1
+            default 1
+
+        config MUSIC_SPECTRUM_MIC_BCLK_GPIO
+            int "Microphone BCLK GPIO"
+            range 0 48
+            default 16
+
+        config MUSIC_SPECTRUM_MIC_WS_GPIO
+            int "Microphone WS GPIO"
+            range 0 48
+            default 15
+
+        config MUSIC_SPECTRUM_MIC_DIN_GPIO
+            int "Microphone DIN GPIO"
+            range 0 48
+            default 17
+
+        config MUSIC_SPECTRUM_MIC_SAMPLE_RATE
+            int "Microphone sample rate"
+            range 8000 48000
+            default 16000
+    endmenu
+
+    menu "Spectrum"
+        config MUSIC_SPECTRUM_FRAME_SAMPLES
+            int "FFT frame samples"
+            range 64 1024
+            default 256
+
+        config MUSIC_SPECTRUM_MIN_HZ
+            int "Lowest displayed frequency (Hz)"
+            range 1 10000
+            default 160
+
+        config MUSIC_SPECTRUM_MAX_HZ
+            int "Highest displayed frequency (Hz)"
+            range 100 12000
+            default 7000
+
+        config MUSIC_SPECTRUM_NOISE_FLOOR_MIN
+            int "Minimum noise floor"
+            range 0 20000
+            default 1200
+
+        config MUSIC_SPECTRUM_LEVEL_RANGE
+            int "Display level range"
+            range 100 20000
+            default 5000
+
+        config MUSIC_SPECTRUM_CALIBRATION_MS
+            int "Startup noise calibration time (ms)"
+            range 0 20000
+            default 5000
+    endmenu
+
+    menu "Animation"
+        config MUSIC_SPECTRUM_SMOOTH_RISE_PERCENT
+            int "Rise smoothing percent"
+            range 1 100
+            default 65
+
+        config MUSIC_SPECTRUM_SMOOTH_FALL_PERCENT
+            int "Fall smoothing percent"
+            range 1 100
+            default 8
+
+        config MUSIC_SPECTRUM_MIN_DELTA
+            int "Minimum level delta"
+            range 0 5000
+            default 60
+
+        config MUSIC_SPECTRUM_DC_BLOCK_ALPHA_PERMILLE
+            int "DC blocker alpha (permille)"
+            range 0 1000
+            default 995
+    endmenu
+
+endmenu
