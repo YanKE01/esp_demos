@@ -111,6 +111,10 @@ projects:
     idf_version: release-v5.5
     target: esp32s3
 
+  - path: examples/peripherals/sdmmc/sdcard_performance
+    idf_version: release-v5.5
+    target: esp32p4
+
   - path: examples/peripherals/spi/spi_basic
     idf_version: release-v5.5
     target: esp32s3
